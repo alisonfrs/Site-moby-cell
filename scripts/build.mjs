@@ -67,7 +67,7 @@ function localBusiness(full = false) {
     image: `${SITE}/assets/img/og.png`,
     logo: `${SITE}/assets/img/logo-512.png`,
     telephone: "+5541991332951",
-    description: "Conserto de celular, formatação de notebook e computador, impressões, xerox, plastificação, produtos personalizados e ponto Shopee no Campo de Santana, Curitiba.",
+    description: "Conserto de celular, formatação de notebook e computador, impressões, xerox, plastificação, produtos personalizados e ponto de atendimento Shopee no Campo de Santana, Curitiba.",
     address: { "@type": "PostalAddress", streetAddress: ADDR.street, addressLocality: ADDR.city, addressRegion: ADDR.uf, postalCode: ADDR.cep, addressCountry: "BR" },
     geo: { "@type": "GeoCoordinates", latitude: -25.5840247, longitude: -49.3204532 },
     areaServed: [{ "@type": "City", name: "Curitiba" }],
@@ -100,28 +100,31 @@ const facts = () => `<dl class="facts">
 </dl>`;
 const more = (current) => `<p class="more">${SERV.filter((s) => s.path !== current).map((s) => `<a href="${s.path}">${s.name}</a>`).join("")}</p>`;
 
-function fld(id, label, control) {
-  return `<div class="fld"><label for="${id}">${label}</label>${control}<p class="ferr" id="${id}-e" role="alert"></p></div>`;
+function fld(id, label, control, hint = "") {
+  return `<div class="fld"><label for="${id}">${label}${hint ? `<span class="hint">${hint}</span>` : ""}</label>${control}<p class="ferr" id="${id}-e" role="alert"></p></div>`;
 }
+const SEL = (id, name, opts, req = true) => `<select id="${id}" name="${name}"${req ? " data-req data-err=\"Escolha uma opção.\"" : ""} aria-describedby="${id}-e"><option value="">Selecione</option>${opts.map((o) => `<option>${o}</option>`).join("")}</select>`;
 function form(service = "", id = "form", title = "Peça seu orçamento", sub = "Responda em 1 minuto. Depois abrimos o WhatsApp com a sua mensagem pronta.") {
   const o = (v, t) => `<option value="${v}"${v === service ? " selected" : ""}>${t}</option>`;
+  const g = (k, inner) => `<div class="grp" data-for="${k}" hidden>${inner}</div>`;
   return `<div class="formBox" id="${id}">
   <h2>${title}</h2><p class="muted">${sub}</p>
   <form class="lead" novalidate>
-    <div class="row2">
-      ${fld(`${id}-n`, "Seu nome", `<input id="${id}-n" name="nome" autocomplete="name" aria-describedby="${id}-n-e" required>`)}
-      ${fld(`${id}-t`, "WhatsApp com DDD", `<input id="${id}-t" name="telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(41) 90000-0000…" aria-describedby="${id}-t-e" required>`)}
-    </div>
-    ${fld(`${id}-s`, "O que você precisa?", `<select id="${id}-s" name="servico" aria-describedby="${id}-s-e" required><option value="">Selecione</option>${o("celular", "Conserto de celular")}${o("formatacao", "Formatação de notebook ou computador")}${o("impressao", "Impressão, xerox ou plastificação")}${o("personalizados", "Produtos personalizados")}${o("outro", "Outro assunto")}</select>`)}
-    <div class="dev">${fld(`${id}-a`, "Modelo do aparelho", `<input id="${id}-a" name="aparelho" autocomplete="off" placeholder="Ex.: Galaxy A15, iPhone 11, Dell Inspiron…">`)}</div>
-    ${fld(`${id}-m`, "Conte o que está acontecendo", `<textarea id="${id}-m" name="mensagem" autocomplete="off" placeholder="Ex.: tela trincada, bateria descarregando rápido…"></textarea>`)}
+    ${fld(`${id}-n`, "Seu nome", `<input id="${id}-n" name="nome" autocomplete="name" data-req data-err="Informe seu nome." aria-describedby="${id}-n-e">`)}
+    ${fld(`${id}-s`, "O que você precisa?", `<select id="${id}-s" name="servico" data-req data-err="Escolha o serviço." aria-describedby="${id}-s-e"><option value="">Selecione</option>${o("celular", "Conserto de celular")}${o("formatacao", "Formatação de notebook ou computador")}${o("impressao", "Impressão, xerox ou plastificação")}${o("personalizados", "Produtos personalizados")}${o("outro", "Outro assunto")}</select>`)}
+    ${g("celular", fld(`${id}-cm`, "Modelo do celular", `<input id="${id}-cm" name="modelo" autocomplete="off" data-req data-err="Informe o modelo do celular." placeholder="Ex.: Galaxy A15, iPhone 11…" aria-describedby="${id}-cm-e">`) + fld(`${id}-cp`, "Qual é o problema?", `<textarea id="${id}-cp" name="problema" data-req data-err="Descreva o problema." placeholder="Ex.: tela trincada, bateria não dura, não carrega…" aria-describedby="${id}-cp-e"></textarea>`))}
+    ${g("formatacao", fld(`${id}-ft`, "Equipamento", SEL(`${id}-ft`, "equipamento", ["Notebook", "Computador (desktop)"])) + fld(`${id}-fm`, "Marca e modelo", `<input id="${id}-fm" name="modelo" autocomplete="off" placeholder="Ex.: Dell Inspiron 15…" aria-describedby="${id}-fm-e">`, "opcional") + `<p class="note">Fazemos somente <b>formatação</b>. Faça o backup dos seus arquivos antes: ele não está incluído.</p>`)}
+    ${g("impressao", fld(`${id}-it`, "O que você precisa?", SEL(`${id}-it`, "tipo", ["Impressão de documento", "Impressão de foto", "Xerox ou digitalização", "Plastificação", "Foto 3×4", "Outro"])) + fld(`${id}-iq`, "Quantidade aproximada", `<input id="${id}-iq" name="quantidade" autocomplete="off" inputmode="numeric" placeholder="Ex.: 10 folhas…" aria-describedby="${id}-iq-e">`, "opcional") + `<p class="note">Depois do envio, abrimos o WhatsApp para você <b>mandar o arquivo</b>. Os valores são informados no atendimento.</p>`)}
+    ${g("personalizados", fld(`${id}-pp`, "Produto", SEL(`${id}-pp`, "produto", ["Caneca", "Azulejo", "Copo ou taça", "Chaveiro", "Adesivo ou etiqueta", "Cartão de visita ou panfleto", "Brinde ou lembrança", "Outro"])) + `<div class="row2">${fld(`${id}-pq`, "Quantidade", `<input id="${id}-pq" name="quantidade" autocomplete="off" inputmode="numeric" data-req data-err="Informe a quantidade." placeholder="Ex.: 1, 20, 100…" aria-describedby="${id}-pq-e">`)}${fld(`${id}-pd`, "Data desejada", `<input id="${id}-pd" name="data" autocomplete="off" placeholder="Ex.: dia 15…" aria-describedby="${id}-pd-e">`, "opcional")}</div>` + fld(`${id}-pm`, "Descreva a personalização", `<textarea id="${id}-pm" name="descricao" placeholder="Ex.: foto da família, nome e data, logomarca da empresa…" aria-describedby="${id}-pm-e"></textarea>`))}
+    ${g("outro", fld(`${id}-om`, "Como podemos ajudar?", `<textarea id="${id}-om" name="mensagem" data-req data-err="Conte o que você precisa." aria-describedby="${id}-om-e"></textarea>`))}
+    ${fld(`${id}-t`, "Seu WhatsApp", `<input id="${id}-t" name="telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(41) 90000-0000…" aria-describedby="${id}-t-e">`, "opcional, para registrarmos seu pedido")}
     <div class="hp" aria-hidden="true"><label>Não preencha<input name="website" tabindex="-1" autocomplete="off"></label></div>
-    <label class="chk"><input type="checkbox" id="${id}-c" name="consent" aria-describedby="${id}-c-e" required><span>Concordo em enviar meus dados à Moby Cell para receber o orçamento. Veja a <a href="/privacidade">Política de Privacidade</a>.</span></label>
+    <label class="chk"><input type="checkbox" id="${id}-c" name="consent" data-req data-err="Aceite o uso dos dados para receber o orçamento." aria-describedby="${id}-c-e"><span>Concordo em enviar estes dados à Moby Cell para receber o orçamento. Veja a <a href="/privacidade">Política de Privacidade</a>.</span></label>
     <p class="ferr" id="${id}-c-e" role="alert"></p>
-    <button class="btn btn-red" type="submit" style="width:100%">${ic("chat")} Enviar e continuar no WhatsApp</button>
+    <button class="btn btn-red" type="submit" style="width:100%">${ic("chat")} Continuar no WhatsApp</button>
     <p class="fmsg" role="status" aria-live="polite"></p>
   </form>
-  <p class="small">O valor final é informado no orçamento, depois da avaliação. Nada é feito sem a sua autorização.</p>
+  <p class="small">O valor final é informado no orçamento. Nada é feito sem a sua autorização.</p>
 </div>`;
 }
 
@@ -153,16 +156,16 @@ ${ld.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script
 <body>
 <a class="skip" href="#main">Ir para o conteúdo</a>
 <header class="hd"><div class="wrap">
-  <a class="brand" href="/" translate="no"><img src="/assets/img/icon-192.png" width="40" height="40" alt=""><span class="bt"><span class="bn">Moby&nbsp;<b>Cell</b></span><small>Conserto de celular e serviços</small></span></a>
-  <nav class="nav" aria-label="Principal">${nav}<a class="cta" href="${wa("Olá! Vim pelo site da Moby Cell.")}" data-track="header">${ic("chat")}<span><small>WhatsApp</small>(41)&nbsp;99133-2951</span></a></nav>
+  <a class="brand" href="/" translate="no"><img src="/assets/img/icon-192.png" width="40" height="40" alt=""><span class="bt"><span class="bn">Moby&nbsp;<b>Cell</b></span><small>Campo de Santana · Curitiba</small></span></a>
+  <nav class="nav" aria-label="Principal">${nav}<a class="cta" href="${wa("Olá! Vim pelo site da Moby Cell.")}" data-track="header">${ic("chat")} WhatsApp</a></nav>
   <button class="burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mnav"><span></span></button>
 </div><nav class="mnav" id="mnav" aria-label="Menu">${mnav}<a href="/orcamento">Pedir orçamento</a></nav></header>
 <main id="main">
 ${body}
 </main>
-<footer class="ft"><div class="ftwave" aria-hidden="true"></div><div class="wrap">
+<footer class="ft"><div class="wrap">
   <div class="cols">
-    <div><h2 translate="no">Moby Cell</h2><p>Conserto de celulares, formatação de notebook e computador, impressões, personalizados e ponto Shopee no Campo de Santana, Curitiba.</p></div>
+    <div><h2 translate="no">Moby Cell</h2><p>Conserto de celulares, formatação de notebook e computador, impressões, personalizados e ponto de atendimento Shopee no Campo de Santana, Curitiba.</p></div>
     <div><h2>Serviços</h2><ul>${SERV.map((s) => `<li><a href="${s.path}">${s.name}</a></li>`).join("")}</ul></div>
     <div><h2>Onde estamos</h2><p>${ADDR.street}<br>${ADDR.hood}, ${ADDR.city}–${ADDR.uf}<br>CEP&nbsp;${ADDR.cep}</p><p>${hoursHtml()}</p><p><a href="${MAPS}" target="_blank" rel="noopener">Ver no Google Maps</a></p></div>
     <div><h2>Contato</h2><p><a href="${wa("Olá! Gostaria de mais informações.")}" data-track="rodape">WhatsApp (41)&nbsp;99133-2951</a></p><p><a href="/privacidade">Política de Privacidade</a></p></div>
@@ -170,9 +173,8 @@ ${body}
   <p class="copy"><span translate="no">Moby Cell</span> · CNPJ 42.252.647/0001-50 · © ${new Date().getFullYear()}</p>
 </div></footer>
 <div class="mbar">
-  <a class="btn btn-wa" href="${wa("Olá! Vim pelo site da Moby Cell.")}" data-track="barra-mobile">${ic("chat")}<span>WhatsApp<small>(41) 99133-2951</small></span></a>
-  <a class="btn btn-o" href="tel:${TEL}" data-track="ligar">${ic("phone")} Ligar</a>
-  <a class="btn btn-o" href="${MAPS}" target="_blank" rel="noopener">${ic("pin")} Rota</a>
+  <a class="btn btn-red" href="${wa("Olá! Vim pelo site da Moby Cell.")}" data-track="barra-mobile">${ic("chat")} WhatsApp</a>
+  <a class="btn btn-o" href="${MAPS}" target="_blank" rel="noopener">${ic("pin")} Como chegar</a>
 </div>
 <div class="ck" id="ck" role="dialog" aria-label="Cookies"><p>Usamos cookies para medir visitas e anúncios. Veja a <a href="/privacidade">Política de Privacidade</a>.</p><div class="b"><button class="btn btn-red" type="button" data-ck="yes">Aceitar</button><button class="btn" type="button" data-ck="no">Recusar</button></div></div>
 <script src="/assets/js/config.js?v=${V}"></script>
@@ -181,28 +183,31 @@ ${body}
 </html>`;
 }
 
-const TRUST = [["shield", "Atendimento<br>direto"], ["bolt", "Orçamento antes<br>do reparo"], ["pin", "Aqui no<br>Campo de Santana"]];
-const trust = () => `<ul class="trust">${TRUST.map(([i, t]) => `<li>${ic(i)}<span>${t}</span></li>`).join("")}</ul>`;
-function hero({ h1, lead, btns, img, m }) {
-  return `<section class="hero"><picture class="hero-bg">${m ? `<source media="(max-width:759px)" srcset="${IMG}${m}">` : ""}<img src="${IMG}${img}" alt="" width="1600" height="900" fetchpriority="high"></picture><div class="wrap hero-in"><div class="hero-txt"><h1>${h1}</h1><p class="lead">${lead}</p><div class="btns">${btns}</div>${trust()}</div></div></section>`;
+const TICKS = ["Loja física no bairro", "Orçamento antes do reparo", "Atendimento presencial e pelo WhatsApp"];
+function hero({ h1, lead, btns, img, alt = "", badge = "Orçamento antes do reparo" }) {
+  return `<section class="hero"><div class="wrap hero-grid"><div class="hero-txt"><h1>${h1}</h1><p class="lead">${lead}</p><div class="btns">${btns}</div><ul class="ticks">${TICKS.map((t) => `<li>${ic("check")}${t}</li>`).join("")}</ul></div><div class="hero-vis"><img src="${IMG}${img}" alt="${alt}" width="1200" height="900" fetchpriority="high"><span class="badge">${ic("shield")} ${badge}</span></div></div></section>`;
 }
 const sh = (t, sub = "") => `<div class="shead"><h2>${t}</h2>${sub ? `<p>${sub}</p>` : ""}</div>`;
 const rowsSec = (title, items, alt = "") => `<section class="sec ${alt}"><div class="wrap">${sh(title)}${rows(items)}</div></section>`;
+const SHOPEE = "Ponto de atendimento Shopee. Consulte no WhatsApp as modalidades disponíveis.";
 const infobar = () => `<section class="infobar"><div class="wrap"><div class="ib">
   <div>${ic("pin")}<div><h3>Nossa localização</h3><p>${ADDR.street}<br>${ADDR.hood}, ${ADDR.city}–${ADDR.uf}</p><a href="${MAPS}" target="_blank" rel="noopener">Ver no Google Maps</a></div></div>
   <div>${ic("clock")}<div><h3>Horário de atendimento</h3><p>${HOURS.slice(0, 2).map(([d, h]) => `${d}: ${NB(h)}`).join("<br>")}<br>Domingo: fechado</p></div></div>
-  <div>${ic("box")}<div><h3>Ponto Shopee</h3><p>Coleta, envio e devolução de encomendas Shopee na loja.</p></div></div>
+  <div>${ic("box")}<div><h3>Ponto Shopee</h3><p>${SHOPEE}</p></div></div>
 </div></div></section>`;
-const CARDS = [
-  ["/conserto-de-celular", "Conserto de celular", "Troca de tela, bateria, conector de carga e mais.", "card-celular.png", ""],
-  ["/formatacao-notebook-computador", "Formatação de notebook e PC", "Formatação para deixar o equipamento pronto.", "card-notebook.png", ""],
-  ["/impressao-xerox-plastificacao", "Impressões e serviços rápidos", "Documentos, xerox, plastificação, foto 3×4.", "card-impressao.png", ""],
-  ["/personalizados", "Personalizados", "Canecas, azulejos, copos, chaveiros e mais.", "card-personalizados.png", ""],
-  [wa("Olá! Vim pelo site e quero saber sobre acessórios."), "Acessórios", "Carregadores, cabos, películas e capinhas, conforme o estoque.", "card-acessorios.png", ' target="_blank" rel="noopener" data-track="card-acessorios"'],
-];
-const cards = () => `<div class="cards">${CARDS.map(([h, t, d, img, x]) => `<a class="card" href="${h}"${x}><div class="ct"><h3>${t}</h3><p>${d}</p></div><img src="${IMG}${img}" alt="" width="600" height="600" loading="lazy"><span class="go">${ic("arrow")}</span></a>`).join("")}</div>`;
-const promo = () => `<section class="sec promo-s"><div class="wrap"><div class="promo"><picture><source media="(max-width:759px)" srcset="${IMG}promo-personalizados-m.jpg"><img src="${IMG}promo-personalizados.jpg" alt="" width="1600" height="500" loading="lazy"></picture><div class="pt"><h2>Presentes personalizados para todas as ocasiões</h2><ul class="chk2"><li>Canecas personalizadas</li><li>Azulejos</li><li>Copos e taças</li><li>Chaveiros</li><li>Brindes e lembranças</li></ul><a class="btn btn-red" href="/personalizados">Ver personalizados</a></div></div></div></section>`;
 const waBtn = (t, tr, label = "Chamar no WhatsApp") => `<a class="btn btn-wa" href="${wa(t)}" data-track="${tr}">${ic("chat")} ${label}</a>`;
+const bento = () => `<div class="bento">
+  <a class="bx main" href="/conserto-de-celular"><h3>Assistência técnica de celulares</h3><p>Avaliamos o aparelho, passamos o orçamento e só reparamos com a sua autorização.</p><ul class="chips2"><li>Troca de tela</li><li>Bateria</li><li>Conector de carga</li></ul><span class="more-l">Conheça o serviço ${ic("arrow")}</span><img src="${IMG}card-celular.png" alt="" width="600" height="600" loading="lazy"></a>
+  <a class="bx f row" href="/formatacao-notebook-computador"><div><h3>Formatação de computadores e notebooks</h3><p>Somente formatação, para deixar o equipamento pronto para uso.</p><span class="more-l">Saiba mais ${ic("arrow")}</span></div><img src="${IMG}card-notebook.png" alt="" width="600" height="600" loading="lazy"></a>
+  <a class="bx i" href="/impressao-xerox-plastificacao"><h3>Impressões e serviços rápidos</h3><p>Documentos, xerox, digitalização, plastificação e foto 3×4.</p><span class="more-l">Saiba mais ${ic("arrow")}</span></a>
+  <a class="bx a" href="${wa("Olá! Vim pelo site e quero saber sobre acessórios.")}" target="_blank" rel="noopener" data-track="card-acessorios"><h3>Acessórios</h3><p>Carregadores, cabos, películas e capinhas, conforme o estoque.</p><span class="more-l">Perguntar no WhatsApp ${ic("arrow")}</span></a>
+</div>
+<p class="alsol"><span>${ic("box")}<b>Ponto Shopee:</b> consulte no WhatsApp as modalidades disponíveis.</span><a href="#personalizados">Veja também os personalizados ↓</a></p>`;
+const vitrine = () => `<section class="sec alt" id="personalizados"><div class="wrap vit"><div class="vit-t"><div class="eyebrow">Personalizados</div><h2>Presentes e brindes com a <em style="font-style:normal;color:var(--red)">sua arte</em></h2><p class="lead" style="margin-top:12px">Para você, para a escola ou para a empresa: uma unidade ou em quantidade, com orçamento combinado antes.</p><ul>${["Canecas personalizadas", "Azulejos", "Copos e taças", "Chaveiros", "Brindes e lembranças"].map((t) => `<li>${ic("check")}${t}</li>`).join("")}</ul><a class="btn btn-red" href="/personalizados">Ver personalizados</a></div><div class="mosaic"><figure class="tall"><img src="${IMG}vitrine-caneca.jpg" alt="" width="800" height="1000" loading="lazy"><figcaption>Canecas</figcaption></figure><figure class="sm"><img src="${IMG}vitrine-azulejo.jpg" alt="" width="800" height="480" loading="lazy"><figcaption>Azulejos</figcaption></figure><figure class="sm"><img src="${IMG}vitrine-copos.jpg" alt="" width="800" height="480" loading="lazy"><figcaption>Copos e taças</figcaption></figure></div></div></section>`;
+const DIFF = ["Loja física no bairro", "Atendimento presencial", "Orçamento antes de executar reparos", "Comunicação direta pelo WhatsApp", "Serviços e produtos variados num só lugar"];
+const confianca = () => `<section class="sec"><div class="wrap trustg"><div><div class="eyebrow">Por que a Moby Cell</div><h2>Atendimento de quem mora e trabalha no&nbsp;bairro</h2><ul class="diff" style="margin-top:20px">${DIFF.map((t) => `<li>${ic("check")}<span>${t}</span></li>`).join("")}</ul></div><div><p class="small" style="margin:0 0 10px">Avaliações de clientes no Google, no texto original.</p><div class="revs">${reviews.map(([n, d, t]) => `<figure class="rev"><p>${t}</p><figcaption><span class="score">5/5</span> · ${n} · ${d}</figcaption></figure>`).join("")}</div><p class="small" style="margin-top:12px"><a href="${MAPS}" target="_blank" rel="noopener">Ver todas as avaliações no Google Maps</a></p></div></div></section>`;
+const localizacao = () => `<section class="sec alt"><div class="wrap locg"><div class="loc-card"><div class="eyebrow">Localização</div><h2>Venha até a loja</h2><dl><div><dt>Endereço</dt><dd>${ADDR.street}<br>${ADDR.hood}, ${ADDR.city}–${ADDR.uf} · CEP ${ADDR.cep}</dd></div><div><dt>Horário</dt><dd>${hoursHtml()}<br><span class="small" style="font-weight:400">Em datas especiais os horários podem mudar. Confirme pelo WhatsApp.</span></dd></div><div><dt>Contato</dt><dd><a href="${wa("Olá! Vim pelo site da Moby Cell.")}" data-track="localizacao">WhatsApp (41)&nbsp;99133-2951</a></dd></div></dl><div class="btns"><a class="btn btn-red" href="${MAPS}" target="_blank" rel="noopener">${ic("pin")} Como chegar</a>${waBtn("Olá! Vim pelo site da Moby Cell.", "localizacao-btn")}</div></div><iframe class="map" title="Mapa da Moby Cell" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=${encodeURIComponent("Rua Ângelo Tozim, 239, Curitiba")}&output=embed"></iframe></div></section>`;
+const ctaBand = () => `<section class="cta-band"><div class="wrap cta-in"><div><h2>Precisa de um orçamento?</h2><p>Conte o que você precisa e respondemos pelo WhatsApp.</p></div><a class="btn btn-w" href="${wa("Olá! Vim pelo site da Moby Cell e quero um orçamento.")}" data-track="faixa-final">${ic("chat")} Solicitar orçamento pelo WhatsApp</a></div></section>`;
 
 const pages = [];
 const add = (p) => pages.push(p);
@@ -221,36 +226,25 @@ const homeFaq = [
 ];
 add({
   path: "/", file: "index.html", current: "",
-  title: "Moby Cell | Conserto de Celular em Curitiba, PR – Campo de Santana",
-  desc: "Conserto de celular, formatação de notebook, impressões, personalizados e ponto Shopee no Campo de Santana, em Curitiba. Peça seu orçamento pelo WhatsApp.",
+  title: "Moby Cell | Assistência Técnica de Celulares em Curitiba",
+  desc: "Assistência técnica de celulares, formatação de computadores, impressões e personalizados no Campo de Santana, em Curitiba. Peça seu orçamento pelo WhatsApp.",
   ld: [localBusiness(), faqLD(homeFaq)],
   body: `
-${hero({ img: "hero-home.jpg", m: "hero-home-m.jpg",
-  h1: "Conserto de celular e serviços rápidos em <em>Campo&nbsp;de&nbsp;Santana</em>",
-  lead: "Troca de tela, bateria e conector de carga, formatação de notebook, impressões e personalizados, com orçamento antes de qualquer reparo.",
-  btns: `<a class="btn btn-red" href="${wa("Olá! Vim pelo site da Moby Cell e quero um orçamento.")}" data-track="hero">${ic("chat")} Solicitar orçamento pelo WhatsApp ${ic("arrow")}</a><a class="btn btn-o" href="/contato">${ic("pin")} Como chegar à loja</a>` })}
-
-<section class="sec"><div class="wrap">${sh("Nossos <em>serviços</em>", "Soluções em tecnologia, impressão e personalizados.")}${cards()}</div></section>
-${promo()}
-${infobar()}
-${rowsSec("Como funciona o conserto", [["Você descreve o problema", "Pelo site, pelo WhatsApp ou na loja."], ["Avaliação e orçamento", "Dizemos o que dá para consertar no seu modelo."], ["Você autoriza", "Nada é feito sem o seu “pode fazer”."], ["Reparo, testes e entrega", "Acompanhamos pela ordem de serviço."]])}
-
-<section class="sec alt"><div class="wrap">
-  ${folio(2, "Avaliações no Google", "Texto original dos clientes")}
-  <div class="revs">${reviews.map(([n, d, t]) => `<figure class="rev"><p>${t}</p><figcaption><span class="score">5/5</span> · ${n} · ${d}</figcaption></figure>`).join("")}</div>
-  <p class="small" style="margin-top:24px"><a href="${MAPS}" target="_blank" rel="noopener">Ver todas as avaliações no Google Maps</a></p>
-</div></section>
-
-<section class="sec"><div class="wrap two">
-  <div>${folio(3, "Orçamento", "")}<h2>Conte o que você&nbsp;precisa.</h2><p class="lead" style="margin-top:20px">Quanto mais detalhes do aparelho e do defeito, mais rápido conseguimos orientar você.</p>
-    <ul class="list"><li>Atendimento pelo WhatsApp ou na loja</li><li>Você aprova o orçamento antes de qualquer reparo</li><li>Loja no Campo de Santana, em Curitiba</li></ul></div>
+${hero({ img: "hero-home.jpg",
+  h1: "Assistência técnica de celulares no <em>Campo de Santana</em>",
+  lead: "Conserto de celulares, formatação de computadores, impressões e personalizados. Atendimento presencial em Curitiba.",
+  btns: `<a class="btn btn-red" href="${wa("Olá! Vim pelo site da Moby Cell e quero um orçamento.")}" data-track="hero">${ic("chat")} Solicitar orçamento pelo WhatsApp</a><a class="btn btn-o" href="${MAPS}" target="_blank" rel="noopener">Como chegar à loja</a>` })}
+<section class="sec" id="servicos"><div class="wrap">${sh("O que fazemos na <em>Moby Cell</em>", "Assistência técnica em destaque e os demais serviços logo ao lado.")}${bento()}</div></section>
+${vitrine()}
+${confianca()}
+<section class="sec alt" id="orcamento"><div class="wrap two">
+  <div><div class="eyebrow">Orçamento</div><h2>Conte o que você&nbsp;precisa</h2><p class="lead" style="margin-top:12px">Os campos mudam conforme o serviço. Depois abrimos o WhatsApp com a sua mensagem pronta.</p>
+    <ul class="list"><li>Você aprova o orçamento antes de qualquer reparo</li><li>Atendimento pelo WhatsApp ou na loja</li><li>Loja no Campo de Santana, em Curitiba</li></ul></div>
   ${form("", "f-home")}
 </div></section>
-
-<section class="sec alt"><div class="wrap">
-  ${folio(4, "Perguntas frequentes", "")}
-  ${faq(homeFaq)}
-</div></section>`,
+${localizacao()}
+<section class="sec"><div class="wrap">${sh("Perguntas frequentes")}${faq(homeFaq)}</div></section>
+${ctaBand()}`,
 });
 
 // ---------------------------------------------------------------- CELULAR
@@ -394,7 +388,7 @@ ${infobar()}
 // ---------------------------------------------------------------- SOBRE
 add({
   path: "/sobre", file: "sobre.html", current: "/sobre",
-  title: "Sobre a Moby Cell | Assistência técnica de celulares e serviços rápidos em Curitiba",
+  title: "Sobre a Moby Cell | Celulares e serviços no Campo de Santana",
   desc: "Conheça a Moby Cell, loja de bairro no Campo de Santana, em Curitiba: assistência técnica de celulares, formatação, impressões, personalizados e ponto Shopee.",
   ld: [localBusiness(true), crumbLD([["Início", "/"], ["Sobre", "/sobre"]])],
   body: `
@@ -405,7 +399,7 @@ ${hero({ img: "hero-loja.jpg",
   btns: `<a class="btn btn-red" href="/orcamento">Pedir orçamento</a><a class="btn btn-o" href="/contato">${ic("pin")} Como chegar</a>` })}
 <section class="sec"><div class="wrap two">
   <div>${folio(1, "Quem somos", "")}
-    <p>Aqui você encontra conserto de celular, formatação de notebooks e computadores, impressões, xerox e plastificação, produtos personalizados, acessórios e o ponto de coleta, envio e devolução da Shopee.</p>
+    <p>Aqui você encontra conserto de celular, formatação de notebooks e computadores, impressões, xerox e plastificação, produtos personalizados, acessórios e o ponto de atendimento Shopee (consulte as modalidades disponíveis).</p>
     <p>Nosso jeito de trabalhar é simples: ouvir o problema, avaliar, passar o orçamento com clareza e só seguir com a sua autorização. Por ser uma equipe pequena, o atendimento é direto, feito por quem executa o serviço.</p>
     <div class="btns"><a class="btn btn-red" href="/orcamento">Pedir orçamento</a><a class="btn" href="/contato">Como chegar</a></div></div>
   <div>${folio(2, "Nossos serviços", "")}<ul class="index" style="border-top:0">${SERV.map((s, i) => `<li><a href="${s.path}"><span class="n">${pad(i + 1)}</span><h3>${s.name}</h3></a></li>`).join("")}</ul></div>

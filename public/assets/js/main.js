@@ -57,57 +57,76 @@
     track("whatsapp_click", { link_location: a.getAttribute("data-track") || "link", page_path: location.pathname });
   });
 
-  // ---- formulário de orçamento
+  // ---- formulário de orçamento (campos mudam conforme o serviço)
   var LABEL = { celular: "conserto de celular", formatacao: "formatação de notebook/computador", impressao: "impressão/xerox/plastificação", personalizados: "produtos personalizados", outro: "outro assunto" };
+  function val(f, n) {
+    var l = f.querySelectorAll("[name=" + n + "]");
+    for (var i = 0; i < l.length; i++) if (!l[i].disabled) return String(l[i].value || "").trim();
+    return "";
+  }
+  function compose(f, k) {
+    var l = [];
+    if (k === "celular") { l.push("Modelo: " + val(f, "modelo")); l.push("Problema: " + val(f, "problema")); }
+    else if (k === "formatacao") { l.push("Equipamento: " + val(f, "equipamento") + (val(f, "modelo") ? " (" + val(f, "modelo") + ")" : "")); }
+    else if (k === "impressao") { l.push("Serviço: " + val(f, "tipo")); if (val(f, "quantidade")) l.push("Quantidade: " + val(f, "quantidade")); l.push("Vou enviar o arquivo por aqui."); }
+    else if (k === "personalizados") { l.push("Produto: " + val(f, "produto")); l.push("Quantidade: " + val(f, "quantidade")); if (val(f, "data")) l.push("Data desejada: " + val(f, "data")); if (val(f, "descricao")) l.push("Personalização: " + val(f, "descricao")); }
+    else { l.push(val(f, "mensagem")); }
+    return l;
+  }
+  function device(f, k) {
+    if (k === "celular") return val(f, "modelo");
+    if (k === "formatacao") return [val(f, "equipamento"), val(f, "modelo")].filter(Boolean).join(" ");
+    if (k === "impressao") return val(f, "tipo");
+    if (k === "personalizados") return val(f, "produto");
+    return "";
+  }
   $$("form.lead").forEach(function (f) {
-    var sel = f.elements.servico, dev = $(".dev", f);
-    function toggle() { if (dev) dev.style.display = (sel.value === "celular" || sel.value === "formatacao") ? "" : "none"; }
-    if (sel) { sel.addEventListener("change", toggle); toggle(); }
-    var msg = $(".fmsg", f), btn = $("button[type=submit]", f);
+    var sel = f.elements.servico, msg = $(".fmsg", f), btn = $("button[type=submit]", f);
+    function toggle() {
+      $$(".grp", f).forEach(function (g) {
+        var on = g.getAttribute("data-for") === sel.value;
+        g.hidden = !on;
+        $$("input,select,textarea", g).forEach(function (el) { el.disabled = !on; });
+      });
+    }
+    sel.addEventListener("change", toggle); toggle();
 
     f.addEventListener("submit", function (e) {
       e.preventDefault();
       msg.className = "fmsg"; msg.textContent = "";
-      var d = {
-        nome: f.elements.nome.value.trim(),
-        telefone: f.elements.telefone.value.trim(),
-        servico: sel.value,
-        aparelho: f.elements.aparelho ? f.elements.aparelho.value.trim() : "",
-        mensagem: f.elements.mensagem.value.trim()
-      };
       var bad = null;
-      function chk(el, ok, t) {
-        var id = el.id, e = document.getElementById(id + "-e");
-        if (e) e.textContent = ok ? "" : t;
+      $$("[data-req]", f).forEach(function (el) {
+        if (el.disabled) return;
+        var ok = el.type === "checkbox" ? el.checked : el.value.trim().length >= (el.name === "nome" ? 2 : 1);
+        var er = document.getElementById(el.id + "-e") || document.getElementById(el.id.replace(/-c$/, "") + "-c-e");
+        if (el.type === "checkbox") er = document.getElementById(el.id + "-e");
+        if (er) er.textContent = ok ? "" : el.getAttribute("data-err");
         if (ok) el.removeAttribute("aria-invalid"); else { el.setAttribute("aria-invalid", "true"); if (!bad) bad = el; }
-      }
-      chk(f.elements.nome, d.nome.length >= 2, "Informe seu nome.");
-      chk(f.elements.telefone, d.telefone.replace(/\D/g, "").length >= 10, "Informe um WhatsApp com DDD.");
-      chk(sel, !!d.servico, "Escolha o serviço.");
-      chk(f.elements.consent, f.elements.consent.checked, "Aceite o uso dos dados para receber o orçamento.");
+      });
+      var tel = val(f, "telefone"), telEl = f.elements.telefone, telErr = document.getElementById(telEl.id + "-e");
+      var telOk = !tel || tel.replace(/\D/g, "").length >= 10;
+      telErr.textContent = telOk ? "" : "Informe o WhatsApp com DDD ou deixe em branco.";
+      if (telOk) telEl.removeAttribute("aria-invalid"); else { telEl.setAttribute("aria-invalid", "true"); if (!bad) bad = telEl; }
       if (bad) { bad.focus(); return; }
       if (f.elements.website.value) return; // honeypot
 
-      var lbl = btn.innerHTML; btn.disabled = true; btn.textContent = "Enviando…";
-      var body = Object.assign({}, d, attr, { pagina: location.pathname, website: "" });
-      var text = "Olá! Vim pelo site da Moby Cell e quero um orçamento de " + LABEL[d.servico] + "." +
-        (d.aparelho ? "\nAparelho: " + d.aparelho : "") +
-        (d.mensagem ? "\n" + d.mensagem : "") + "\nNome: " + d.nome;
+      var k = sel.value, nome = val(f, "nome"), linhas = compose(f, k);
+      var lbl = btn.innerHTML; btn.disabled = true; btn.textContent = "Abrindo o WhatsApp…";
+      var text = "Olá! Vim pelo site da Moby Cell e quero um orçamento de " + LABEL[k] + ".\n" + linhas.join("\n") + "\nNome: " + nome;
       var wa = "https://wa.me/" + C.whatsapp + "?text=" + encodeURIComponent(text);
-
       var done = function () {
-        track("generate_lead", { service: d.servico, page_path: location.pathname });
+        track("generate_lead", { service: k, page_path: location.pathname });
         if (C.adsId && C.adsLeadLabel) track("conversion", { send_to: C.adsId + "/" + C.adsLeadLabel });
-        // pequeno atraso para o evento sair antes da navegação
         setTimeout(function () { location.href = wa; }, 250);
       };
+      // Com WhatsApp informado, o pedido também é registrado no sistema da loja.
+      if (!tel || !C.leadEndpoint) return done();
+      var body = Object.assign({}, { nome: nome, telefone: tel, servico: k, aparelho: device(f, k), mensagem: linhas.join(" | ").slice(0, 900) }, attr, { pagina: location.pathname, website: "" });
       var ctl = window.AbortController ? new AbortController() : null;
       var t = setTimeout(function () { if (ctl) ctl.abort(); }, 6000);
-      if (!C.leadEndpoint) { clearTimeout(t); return done(); }
       fetch(C.leadEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined })
-        .catch(function () {}) // se falhar, o cliente ainda é atendido pelo WhatsApp
+        .catch(function () {})
         .then(function () { clearTimeout(t); done(); });
     });
-    function err(t) { msg.className = "fmsg err"; msg.textContent = t; }
   });
 })();
