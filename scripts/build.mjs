@@ -7,6 +7,7 @@ import { writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+const V = Date.now().toString(36);
 const OUT = join(dirname(fileURLToPath(import.meta.url)), "..", "public");
 const SITE = "https://mobycell.com.br";
 const WA = "5541991332951";
@@ -136,7 +137,7 @@ ${index ? "" : '<meta name="robots" content="noindex,follow">'}
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${url}"><meta property="og:image" content="${SITE}/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="stylesheet" href="/assets/css/style.css?v=${V}">
 ${ld.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script>`).join("\n")}
 </head>
 <body>
@@ -163,8 +164,8 @@ ${body}
   <a class="btn btn-red" href="/orcamento">Orçamento</a>
 </div>
 <div class="ck" id="ck" role="dialog" aria-label="Cookies"><p>Usamos cookies para medir visitas e anúncios. Veja a <a href="/privacidade">Política de Privacidade</a>.</p><div class="b"><button class="btn btn-red" type="button" data-ck="yes">Aceitar</button><button class="btn" type="button" data-ck="no">Recusar</button></div></div>
-<script src="/assets/js/config.js"></script>
-<script src="/assets/js/main.js" defer></script>
+<script src="/assets/js/config.js?v=${V}"></script>
+<script src="/assets/js/main.js?v=${V}" defer></script>
 </body>
 </html>`;
 }
