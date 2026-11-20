@@ -21,6 +21,10 @@ const wa = (t) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 const IMG = "/assets/img/slots/";
 const TEL = "+5541991332951";
+const INSTAGRAM = "https://www.instagram.com/mobycell_/";
+// Bairros vizinhos citados no site e nos dados estruturados (SEO local).
+const HOODS = ["Campo de Santana", "Tatuquara", "Caximba", "Umbará"];
+const placeLD = () => [...HOODS.map((n) => ({ "@type": "Place", name: `${n}, Curitiba – PR` })), { "@type": "City", name: "Curitiba" }];
 const pad = (n) => String(n).padStart(2, "0");
 
 const I = {
@@ -47,6 +51,13 @@ const TNAV = [
 ];
 const WAI = (n) => `<svg width="${n}" height="${n}" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16.04 3C8.86 3 3.04 8.82 3.04 16c0 2.29.6 4.53 1.74 6.5L3 29l6.68-1.75A12.94 12.94 0 0 0 16.04 29C23.22 29 29 23.18 29 16S23.22 3 16.04 3zm0 23.62c-1.98 0-3.92-.53-5.61-1.54l-.4-.24-3.97 1.04 1.06-3.87-.26-.4a10.6 10.6 0 0 1-1.63-5.6c0-5.86 4.77-10.63 10.64-10.63 5.86 0 10.6 4.77 10.6 10.63 0 5.86-4.77 10.61-10.43 10.61zm5.83-7.95c-.32-.16-1.89-.93-2.18-1.04-.29-.11-.5-.16-.72.16-.21.32-.82 1.04-1 1.25-.19.21-.37.24-.69.08-.32-.16-1.35-.5-2.57-1.59-.95-.85-1.59-1.9-1.78-2.22-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.72-1.73-.98-2.37-.26-.62-.52-.54-.72-.55h-.61c-.21 0-.56.08-.85.4-.29.32-1.11 1.09-1.11 2.66s1.14 3.08 1.3 3.29c.16.21 2.24 3.42 5.43 4.8.76.33 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.89-.77 2.15-1.52.27-.74.27-1.38.19-1.52-.08-.13-.29-.21-.61-.37z"/></svg>`;
 // Fotos das aberturas: recortes da arte nova (public/assets/img/home). "contain" = foto de produto sobre fundo escuro.
+const HERO_ALT = {
+  "hero-celular.jpg": "Celular aberto na bancada da Moby Cell durante conserto, no Campo de Santana, Curitiba",
+  "hero-loja.jpg": "Bancada de assistência técnica de celulares da Moby Cell",
+  "hero-formatacao.jpg": "Notebook formatado e pronto para uso na Moby Cell",
+  "hero-impressao.jpg": "Impressora colorida para impressões, xerox e fotos na Moby Cell",
+  "hero-personalizados.jpg": "Canecas personalizadas com foto, logomarca e frase feitas na Moby Cell",
+};
 const HERO_IMG = {
   "hero-celular.jpg": ["hero.webp", 1198, 864, false],
   "hero-loja.jpg": ["hero.webp", 1198, 864, false],
@@ -61,6 +72,11 @@ const NAV = [
   ["/personalizados", "Personalizados"],
   ["/sobre", "Sobre"],
   ["/contato", "Contato"],
+];
+const SERV_EXTRA = [
+  { path: "/troca-de-tela-celular", name: "Troca de tela de celular", type: "Troca de tela de celular" },
+  { path: "/troca-de-bateria-celular", name: "Troca de bateria de celular", type: "Troca de bateria de celular" },
+  { path: "/conector-de-carga-celular", name: "Conserto do conector de carga", type: "Troca de conector de carga de celular" },
 ];
 const SERV = [
   { path: "/conserto-de-celular", name: "Conserto de celular", type: "Conserto de celular" },
@@ -89,7 +105,11 @@ function localBusiness(full = false) {
     description: "Conserto de celular, formatação de notebook e computador, impressões, xerox, plastificação, produtos personalizados e ponto de atendimento Shopee no Campo de Santana, Curitiba.",
     address: { "@type": "PostalAddress", streetAddress: ADDR.street, addressLocality: ADDR.city, addressRegion: ADDR.uf, postalCode: ADDR.cep, addressCountry: "BR" },
     geo: { "@type": "GeoCoordinates", latitude: -25.5840247, longitude: -49.3204532 },
-    areaServed: [{ "@type": "City", name: "Curitiba" }],
+    areaServed: placeLD(),
+    hasMap: MAPS,
+    priceRange: "$$",
+    currenciesAccepted: "BRL",
+    knowsAbout: ["Conserto de celular", "Troca de tela de celular", "Troca de bateria de celular", "Troca de conector de carga", "Formatação de notebook e computador", "Impressão e xerox", "Canecas e brindes personalizados"],
     paymentAccepted: "Dinheiro, cartão, Pix",
     openingHoursSpecification: [
       { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "09:30", closes: "17:00" },
@@ -97,14 +117,14 @@ function localBusiness(full = false) {
     ],
     hasOfferCatalog: {
       "@type": "OfferCatalog", name: "Serviços da Moby Cell",
-      itemListElement: SERV.map((s) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: s.type } })),
+      itemListElement: [...SERV, ...SERV_EXTRA].map((s) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: s.type } })),
     },
-    sameAs: [MAPS],
+    sameAs: [MAPS, INSTAGRAM],
   };
 }
 const faqLD = (items) => ({ "@context": "https://schema.org", "@type": "FAQPage", mainEntity: items.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })) });
 const crumbLD = (items) => ({ "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: items.map(([n, p], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: SITE + p })) });
-const serviceLD = (name, type) => ({ "@context": "https://schema.org", "@type": "Service", name, serviceType: type, provider: { "@id": `${SITE}/#loja` }, areaServed: { "@type": "City", name: "Curitiba" } });
+const serviceLD = (name, type, description = "") => ({ "@context": "https://schema.org", "@type": "Service", name, serviceType: type, ...(description ? { description } : {}), provider: { "@id": `${SITE}/#loja` }, areaServed: placeLD() });
 
 const faq = (items) => `<div class="faq">${items.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join("")}</div>`;
 const rows = (items) => `<ol class="rows">${items.map(([t, d], i) => `<li><span class="n">${pad(i + 1)}</span><div><h3>${t}</h3><p>${d}</p></div></li>`).join("")}</ol>`;
@@ -192,7 +212,7 @@ ${body}
 <footer class="ft"><div class="wrap">
   <div class="cols">
     <div><h2 translate="no">Moby Cell</h2><p>Conserto de celulares, formatação de notebook e computador, impressões, personalizados e ponto de atendimento Shopee no Campo de Santana, Curitiba.</p></div>
-    <div><h2>Serviços</h2><ul>${SERV.map((s) => `<li><a href="${s.path}">${s.name}</a></li>`).join("")}</ul></div>
+    <div><h2>Serviços</h2><ul>${[SERV[0], ...SERV_EXTRA, ...SERV.slice(1)].map((s) => `<li><a href="${s.path}">${s.name}</a></li>`).join("")}</ul></div>
     <div><h2>Onde estamos</h2><p>${ADDR.street}<br>${ADDR.hood}, ${ADDR.city}–${ADDR.uf}<br>CEP&nbsp;${ADDR.cep}</p><p>${hoursHtml()}</p><p><a href="${MAPS}" target="_blank" rel="noopener">Ver no Google Maps</a></p></div>
     <div><h2>Contato</h2><p><a href="${wa("Olá! Gostaria de mais informações.")}" data-track="rodape">WhatsApp (41)&nbsp;99133-2951</a></p><p><a href="/privacidade">Política de Privacidade</a></p></div>
   </div>
@@ -216,7 +236,7 @@ ${body}
 const GRATING = `<a class="g-rating" href="https://www.google.com/maps/place/Moby+Cell+Assistencia+t%C3%A9cnica+Celulares/@-25.5840198,-49.3230281,17z/data=!4m6!3m5!1s0x94dcfc2a0990a4cf:0x7839fd71f4723732!8m2!3d-25.5840247!4d-49.3204532!16s%2Fg%2F11q484tv8z" target="_blank" rel="noopener" aria-label="Nota 4,8 de 5 com 44 avaliações no Google"><b>4,8</b><span class="st" aria-hidden="true">★★★★★</span><span>44 avaliações no Google</span></a>`;
 const TICKS = ["Garantia de até 1 ano, conforme a peça e o serviço", "Orçamento antes do reparo", "Loja física no bairro, atendimento também pelo WhatsApp"];
 function hero({ h1, lead, btns, img, alt = "", badge = "Orçamento antes do reparo" }) {
-  return `<section class="hero"><div class="wrap hero-grid"><div class="hero-txt">${GRATING}<h1>${h1}</h1><p class="lead">${lead}</p><div class="btns">${btns}</div><ul class="ticks">${TICKS.map((t) => `<li>${ic("check")}${t}</li>`).join("")}</ul></div><div class="hero-vis${(HERO_IMG[img] || [])[3] ? " contain" : ""}"><img src="${HERO_IMG[img] ? "/assets/img/home/" + HERO_IMG[img][0] : IMG + img}" alt="${alt}" width="${HERO_IMG[img] ? HERO_IMG[img][1] : 1200}" height="${HERO_IMG[img] ? HERO_IMG[img][2] : 900}" fetchpriority="high"><span class="badge">${ic("shield")} ${badge}</span></div></div></section>`;
+  return `<section class="hero"><div class="wrap hero-grid"><div class="hero-txt">${GRATING}<h1>${h1}</h1><p class="lead">${lead}</p><div class="btns">${btns}</div><ul class="ticks">${TICKS.map((t) => `<li>${ic("check")}${t}</li>`).join("")}</ul></div><div class="hero-vis${(HERO_IMG[img] || [])[3] ? " contain" : ""}"><img src="${HERO_IMG[img] ? "/assets/img/home/" + HERO_IMG[img][0] : IMG + img}" alt="${alt || HERO_ALT[img] || ""}" width="${HERO_IMG[img] ? HERO_IMG[img][1] : 1200}" height="${HERO_IMG[img] ? HERO_IMG[img][2] : 900}" fetchpriority="high"><span class="badge">${ic("shield")} ${badge}</span></div></div></section>`;
 }
 const sh = (t, sub = "") => `<div class="shead"><h2>${t}</h2>${sub ? `<p>${sub}</p>` : ""}</div>`;
 const rowsSec = (title, items, alt = "") => `<section class="sec ${alt}"><div class="wrap">${sh(title)}${rows(items)}</div></section>`;
@@ -226,6 +246,7 @@ const infobar = () => `<section class="infobar"><div class="wrap"><div class="ib
   <div>${ic("clock")}<div><h3>Horário de atendimento</h3><p>${HOURS.slice(0, 2).map(([d, h]) => `${d}: ${NB(h)}`).join("<br>")}<br>Domingo: fechado</p></div></div>
   <div>${ic("box")}<div><h3>Ponto Shopee</h3><p>${SHOPEE}</p></div></div>
 </div></div></section>`;
+const bairros = () => `<section class="sec alt"><div class="wrap"><div class="shead"><h2>Atendimento no <em>Campo de Santana</em> e região</h2><p>A Moby Cell fica na ${ADDR.street}, no Campo de Santana, região sul de Curitiba. Atendemos na loja moradores do Campo de Santana e dos bairros vizinhos, como Tatuquara, Caximba e Umbará.</p></div><ul class="index">${HOODS.map((h, i) => `<li class="plain"><div><span class="n">${pad(i + 1)}</span><h3>${h}</h3></div></li>`).join("")}</ul><p class="small" style="margin-top:16px">Atendimento presencial na loja. Não fazemos atendimento a domicílio. <a href="${MAPS}" target="_blank" rel="noopener">Ver rota no Google Maps</a></p></div></section>`;
 const waBtn = (t, tr, label = "Chamar no WhatsApp") => `<a class="btn btn-wa" href="${wa(t)}" data-track="${tr}">${ic("chat")} ${label}</a>`;
 const bento = () => `<div class="bento">
   <a class="bx main" href="/conserto-de-celular"><h3>Assistência técnica de celulares</h3><p>Avaliamos o aparelho, passamos o orçamento e só reparamos com a sua autorização.</p><ul class="chips2"><li>Troca de tela</li><li>Bateria</li><li>Conector de carga</li></ul><span class="more-l">Conheça o serviço ${ic("arrow")}</span><img src="${IMG}card-celular.png" alt="" width="600" height="600" loading="lazy"></a>
@@ -302,7 +323,7 @@ ${hero({ img: "hero-celular.jpg",
   h1: "Conserto de celular com orçamento claro <em>antes de começar</em>",
   lead: "Tela quebrada, bateria que não dura ou celular que não carrega? Descreva o problema e receba o orçamento. Você só autoriza o reparo se concordar.",
   btns: `<a class="btn btn-red" href="#orcamento">Pedir orçamento</a>${waBtn("Olá! Quero um orçamento de conserto de celular. Modelo: ", "celular-hero")}` })}
-${rowsSec("Reparos mais comuns", [["Troca de tela", "Conforme o modelo e a peça."], ["Troca de bateria", "Para o aparelho voltar a durar."], ["Conector de carga", "Quando o celular não carrega direito."]])}
+${rowsSec("Reparos mais comuns", [["Troca de tela", `Tela quebrada, trincada ou touch sem resposta. <a href="/troca-de-tela-celular" style="color:#fff;text-decoration:underline">Saiba mais</a>`], ["Troca de bateria", `Bateria que descarrega rápido ou está estufada. <a href="/troca-de-bateria-celular" style="color:#fff;text-decoration:underline">Saiba mais</a>`], ["Conector de carga", `Quando o celular não carrega direito. <a href="/conector-de-carga-celular" style="color:#fff;text-decoration:underline">Saiba mais</a>`]])}
 
 <section class="sec"><div class="wrap">
   ${folio(1, "Como funciona")}
@@ -321,7 +342,90 @@ ${rowsSec("Reparos mais comuns", [["Troca de tela", "Conforme o modelo e a peça
 </div></section>
 
 ${infobar()}
+${bairros()}
 <section class="sec"><div class="wrap">${folio(3, "Perguntas frequentes", "")}${faq(celFaq)}${more("/conserto-de-celular")}</div></section>`,
+});
+
+// ---------------------------------------------------------------- REPAROS ESPECÍFICOS (SEO)
+// Uma página por busca comum ("troca de tela", "troca de bateria", "conector de carga"),
+// todas com as mesmas regras: sem preço, sem prazo prometido, garantia "de até 1 ano, conforme a peça e o serviço".
+const GAR = "A garantia é de até 1 ano e varia conforme a peça e o serviço. O prazo de garantia do seu conserto é informado no orçamento.";
+function repairPage({ path, name, title, desc, h1, lead, about, signs, steps, faqItems, wa: waText }) {
+  const fq = [...faqItems,
+    ["Quanto custa?", "O valor depende do modelo do celular e da peça. Envie o modelo pelo WhatsApp ou pelo formulário e passamos o orçamento. Você só autoriza se concordar."],
+    ["Tem garantia?", GAR],
+    ["Onde fica a loja?", `Na ${ADDR.street}, ${ADDR.hood}, ${ADDR.city}–${ADDR.uf}, CEP ${ADDR.cep}. Atendemos moradores do Campo de Santana e de bairros vizinhos, como Tatuquara, Caximba e Umbará.`],
+    ["Qual o horário de atendimento?", "Segunda a sexta, das 9h30 às 17h, e sábado, das 9h30 às 13h. Domingo fechado."],
+  ];
+  add({
+    path, file: path.slice(1) + ".html", current: "/conserto-de-celular",
+    title, desc,
+    ld: [localBusiness(), serviceLD(name, name, desc), crumbLD([["Início", "/"], ["Conserto de celular", "/conserto-de-celular"], [name, path]]), faqLD(fq)],
+    body: `
+<nav class="crumbs wrap" aria-label="Trilha"><a href="/">Início</a> / <a href="/conserto-de-celular">Conserto de celular</a> / ${name}</nav>
+${hero({ img: "hero-celular.jpg", h1, lead,
+  btns: `<a class="btn btn-red" href="#orcamento">Pedir orçamento</a>${waBtn(waText, path.slice(1) + "-hero")}` })}
+<section class="sec"><div class="wrap two">
+  <div>${folio(1, "O serviço")}<h2>${name} na Moby Cell</h2>${about.map((t) => `<p class="lead" style="margin-top:16px">${t}</p>`).join("")}</div>
+  <div class="formBox" style="border-top-color:var(--red)"><h3>Resumo</h3><ul class="list">
+    <li>Orçamento antes do reparo: você só autoriza se concordar</li>
+    <li>Garantia de até 1 ano, conforme a peça e o serviço</li>
+    <li>Loja física no Campo de Santana, Curitiba</li>
+    <li>Pagamento em dinheiro, cartão ou Pix</li>
+  </ul></div>
+</div></section>
+${rowsSec("Sinais de que você precisa do serviço", signs.map((t) => [t[0], t[1]]), "alt")}
+<section class="sec"><div class="wrap">${folio(2, "Como funciona")}<h2 style="margin-bottom:clamp(24px,4vw,40px)">Do contato à&nbsp;entrega.</h2>${rows(steps)}</div></section>
+<section class="sec alt"><div class="wrap two">
+  <div>${folio(3, "Orçamento", "")}<h2>Peça o orçamento.</h2>
+    <p class="lead" style="margin-top:20px">Informe o modelo do celular e o que está acontecendo. Se preferir, fale direto no WhatsApp.</p>
+    <div class="btns">${WAG(waText, path.slice(1) + "-meio")}</div>
+  </div>
+  ${form("celular", "orcamento", "Orçamento de " + name.toLowerCase())}
+</div></section>
+${infobar()}
+${bairros()}
+<section class="sec"><div class="wrap">${folio(4, "Perguntas frequentes", "")}${faq(fq)}
+<p class="more"><a href="/conserto-de-celular">Conserto de celular</a>${SERV_EXTRA.filter((x) => x.path !== path).map((x) => `<a href="${x.path}">${x.name}</a>`).join("")}<a href="/formatacao-notebook-computador">Formatação de notebook</a></p></div></section>`,
+  });
+}
+const STEPS = [["Contato", "Envie o modelo e o defeito pelo WhatsApp ou pelo formulário."], ["Avaliação", "O aparelho é avaliado na loja para confirmar o defeito."], ["Orçamento", "Você recebe o valor, o prazo estimado e a garantia, e decide se autoriza."], ["Reparo e testes", "Fazemos o reparo e testamos o aparelho antes da entrega."], ["Retirada", "Você retira na loja, com a ordem de serviço registrada."]];
+
+repairPage({
+  path: "/troca-de-tela-celular", name: "Troca de tela de celular",
+  title: "Troca de Tela de Celular no Campo de Santana, Curitiba | Moby Cell",
+  desc: "Troca de tela de celular no Campo de Santana, em Curitiba: tela quebrada, trincada, touch sem resposta ou manchas. Orçamento antes do reparo e garantia de até 1 ano.",
+  h1: "Troca de tela de celular no <em>Campo de Santana</em>",
+  lead: "Tela quebrada, trincada ou com o touch falhando? Fazemos a troca da tela do seu celular na loja, com orçamento antes do reparo.",
+  about: ["Trocamos a tela (display e touch) de celulares das marcas mais comuns, como Samsung, Motorola, Xiaomi e iPhone, conforme o modelo e a disponibilidade da peça.", "Antes de começar, avaliamos o aparelho e informamos o valor, o prazo estimado e a garantia. Recomendamos fazer o backup dos seus dados antes de qualquer reparo."],
+  signs: [["Tela trincada ou quebrada", "Vidro rachado, com pontas soltas ou estilhaçado."], ["Touch que não responde", "Partes da tela não funcionam ou o celular clica sozinho."], ["Manchas, linhas ou tela preta", "A imagem falha, aparece com listras ou some com o celular ligado."]],
+  steps: STEPS,
+  faqItems: [["Vale a pena trocar a tela?", "Depende do modelo e do estado do aparelho. Na avaliação dizemos se compensa e, se não compensar, avisamos no orçamento."], ["Vou perder meus dados na troca de tela?", "Normalmente a troca de tela não apaga os dados, mas recomendamos fazer o backup antes de qualquer reparo."]],
+  wa: "Olá! Quero um orçamento de troca de tela. Modelo do celular: ",
+});
+repairPage({
+  path: "/troca-de-bateria-celular", name: "Troca de bateria de celular",
+  title: "Troca de Bateria de Celular no Campo de Santana, Curitiba | Moby Cell",
+  desc: "Troca de bateria de celular no Campo de Santana, em Curitiba: bateria que descarrega rápido, celular desligando sozinho ou bateria estufada. Orçamento antes e garantia de até 1 ano.",
+  h1: "Troca de bateria de celular no <em>Campo de Santana</em>",
+  lead: "Bateria que não dura, celular desligando com carga ou bateria estufada? Trocamos a bateria do seu celular na loja, com orçamento antes.",
+  about: ["Fazemos a troca de bateria de celulares das marcas mais comuns, como Samsung, Motorola, Xiaomi e iPhone, conforme o modelo e a disponibilidade da peça.", "Se a bateria estiver estufada (tampa levantando ou tela saindo do lugar), pare de usar e de carregar o aparelho e traga à loja o quanto antes."],
+  signs: [["Descarrega muito rápido", "A carga não dura o dia, mesmo com uso leve."], ["Desliga sozinho", "O celular apaga com carga sobrando ou só funciona na tomada."], ["Bateria estufada", "A tampa levanta, a tela descola ou o aparelho esquenta demais."]],
+  steps: STEPS,
+  faqItems: [["Como sei se o problema é a bateria?", "Os sinais mais comuns são a carga que acaba rápido e o celular desligando sozinho. Na avaliação confirmamos se é a bateria, o conector ou outro defeito."], ["Bateria estufada é perigoso?", "Sim, pode ser. Pare de usar e de carregar o aparelho e traga à loja para avaliação."]],
+  wa: "Olá! Quero um orçamento de troca de bateria. Modelo do celular: ",
+});
+repairPage({
+  path: "/conector-de-carga-celular", name: "Conserto do conector de carga",
+  title: "Celular Não Carrega? Conector de Carga no Campo de Santana | Moby Cell",
+  desc: "Conserto e troca do conector de carga de celular no Campo de Santana, em Curitiba: celular que não carrega, carrega devagar ou só na posição certa. Orçamento antes do reparo.",
+  h1: "Celular não carrega? Conserto do <em>conector de carga</em>",
+  lead: "Celular que não carrega, carrega devagar ou só com o cabo numa posição? Avaliamos o conector de carga e passamos o orçamento antes.",
+  about: ["Avaliamos e trocamos o conector de carga (entrada do carregador) de celulares das marcas mais comuns, conforme o modelo e a disponibilidade da peça.", "Às vezes o problema é sujeira na entrada, o cabo ou o carregador. Por isso avaliamos antes de trocar qualquer peça."],
+  signs: [["Não carrega", "O celular não mostra carregando com nenhum cabo."], ["Só carrega numa posição", "O cabo fica frouxo ou precisa ser segurado para carregar."], ["Carrega devagar", "A carga sobe muito devagar ou para no meio."]],
+  steps: STEPS,
+  faqItems: [["Pode ser só o cabo ou o carregador?", "Pode. Antes de trocar o conector, testamos com outros cabos e carregadores e verificamos se há sujeira na entrada."], ["O celular também não aparece no computador. É o conector?", "Pode ser. O conector de carga também é usado para dados. Avaliamos e informamos no orçamento."]],
+  wa: "Olá! Meu celular não está carregando. Quero um orçamento. Modelo do celular: ",
 });
 
 // ---------------------------------------------------------------- FORMATAÇÃO
@@ -528,5 +632,5 @@ const today = new Date().toISOString().slice(0, 10);
 const urls = pages.filter((p) => p.index !== false);
 writeFileSync(join(OUT, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((p) => `  <url><loc>${SITE}${p.path === "/" ? "/" : p.path}</loc><lastmod>${today}</lastmod></url>`).join("\n")}\n</urlset>\n`);
-writeFileSync(join(OUT, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
+writeFileSync(join(OUT, "robots.txt"), `# Buscadores e assistentes de IA podem ler o site inteiro.\nUser-agent: *\nAllow: /\n\nUser-agent: Googlebot\nAllow: /\n\nUser-agent: Google-Extended\nAllow: /\n\nUser-agent: Bingbot\nAllow: /\n\nUser-agent: OAI-SearchBot\nAllow: /\n\nUser-agent: GPTBot\nAllow: /\n\nUser-agent: PerplexityBot\nAllow: /\n\nUser-agent: ClaudeBot\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
 console.log(`ok: ${pages.length} páginas`);
