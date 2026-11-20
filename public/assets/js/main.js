@@ -75,13 +75,20 @@
         aparelho: f.elements.aparelho ? f.elements.aparelho.value.trim() : "",
         mensagem: f.elements.mensagem.value.trim()
       };
-      if (d.nome.length < 2) return err("Informe seu nome.");
-      if (d.telefone.replace(/\D/g, "").length < 10) return err("Informe um WhatsApp com DDD.");
-      if (!d.servico) return err("Escolha o serviço.");
-      if (!f.elements.consent.checked) return err("Aceite o uso dos dados para receber o orçamento.");
+      var bad = null;
+      function chk(el, ok, t) {
+        var id = el.id, e = document.getElementById(id + "-e");
+        if (e) e.textContent = ok ? "" : t;
+        if (ok) el.removeAttribute("aria-invalid"); else { el.setAttribute("aria-invalid", "true"); if (!bad) bad = el; }
+      }
+      chk(f.elements.nome, d.nome.length >= 2, "Informe seu nome.");
+      chk(f.elements.telefone, d.telefone.replace(/\D/g, "").length >= 10, "Informe um WhatsApp com DDD.");
+      chk(sel, !!d.servico, "Escolha o serviço.");
+      chk(f.elements.consent, f.elements.consent.checked, "Aceite o uso dos dados para receber o orçamento.");
+      if (bad) { bad.focus(); return; }
       if (f.elements.website.value) return; // honeypot
 
-      btn.disabled = true; btn.textContent = "Enviando…";
+      var lbl = btn.innerHTML; btn.disabled = true; btn.textContent = "Enviando…";
       var body = Object.assign({}, d, attr, { pagina: location.pathname, website: "" });
       var text = "Olá! Vim pelo site da Moby Cell e quero um orçamento de " + LABEL[d.servico] + "." +
         (d.aparelho ? "\nAparelho: " + d.aparelho : "") +
