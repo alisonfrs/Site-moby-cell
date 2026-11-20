@@ -18,9 +18,19 @@ const HOURS = [["Segunda a sexta", "9h30 às 17h"], ["Sábado", "9h30 às 13h"],
 const NB = (s) => s.replace(/(\d)h(\d*) às (\d)/g, "$1h$2&nbsp;às&nbsp;$3");
 const wa = (t) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+const IMG = "/assets/img/slots/";
+const TEL = "+5541991332951";
 const pad = (n) => String(n).padStart(2, "0");
 
 const I = {
+  phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+  pin: '<path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/>',
+  shield: '<path d="M12 3 4 6v5c0 5 3.4 8.6 8 10 4.6-1.4 8-5 8-10V6l-8-3z"/><path d="m9 12 2 2 4-4"/>',
+  bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  box: '<path d="M21 8 12 3 3 8v8l9 5 9-5V8z"/><path d="m3 8 9 5 9-5M12 13v8"/>',
+  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  check: '<path d="m5 12 5 5 9-10"/>',
   chat: '<path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-5.2A8.5 8.5 0 1 1 21 11.5z"/>',
 };
 const ic = (n) => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false">${I[n]}</svg>`;
@@ -143,14 +153,14 @@ ${ld.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script
 <body>
 <a class="skip" href="#main">Ir para o conteúdo</a>
 <header class="hd"><div class="wrap">
-  <a class="brand" href="/" translate="no"><img src="/assets/img/icon-192.png" width="40" height="40" alt=""><span>Moby&nbsp;<b>Cell</b></span></a>
-  <nav class="nav" aria-label="Principal">${nav}<a class="cta" href="/orcamento">Pedir orçamento</a></nav>
+  <a class="brand" href="/" translate="no"><img src="/assets/img/icon-192.png" width="40" height="40" alt=""><span class="bt"><span class="bn">Moby&nbsp;<b>Cell</b></span><small>Conserto de celular e serviços</small></span></a>
+  <nav class="nav" aria-label="Principal">${nav}<a class="cta" href="${wa("Olá! Vim pelo site da Moby Cell.")}" data-track="header">${ic("chat")}<span><small>WhatsApp</small>(41)&nbsp;99133-2951</span></a></nav>
   <button class="burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mnav"><span></span></button>
 </div><nav class="mnav" id="mnav" aria-label="Menu">${mnav}<a href="/orcamento">Pedir orçamento</a></nav></header>
 <main id="main">
 ${body}
 </main>
-<footer class="ft"><div class="wrap">
+<footer class="ft"><div class="ftwave" aria-hidden="true"></div><div class="wrap">
   <div class="cols">
     <div><h2 translate="no">Moby Cell</h2><p>Conserto de celulares, formatação de notebook e computador, impressões, personalizados e ponto Shopee no Campo de Santana, Curitiba.</p></div>
     <div><h2>Serviços</h2><ul>${SERV.map((s) => `<li><a href="${s.path}">${s.name}</a></li>`).join("")}</ul></div>
@@ -160,8 +170,9 @@ ${body}
   <p class="copy"><span translate="no">Moby Cell</span> · CNPJ 42.252.647/0001-50 · © ${new Date().getFullYear()}</p>
 </div></footer>
 <div class="mbar">
-  <a class="btn btn-wa" href="${wa("Olá! Vim pelo site da Moby Cell.")}" data-track="barra-mobile">${ic("chat")} WhatsApp</a>
-  <a class="btn btn-red" href="/orcamento">Orçamento</a>
+  <a class="btn btn-wa" href="${wa("Olá! Vim pelo site da Moby Cell.")}" data-track="barra-mobile">${ic("chat")}<span>WhatsApp<small>(41) 99133-2951</small></span></a>
+  <a class="btn btn-o" href="tel:${TEL}" data-track="ligar">${ic("phone")} Ligar</a>
+  <a class="btn btn-o" href="${MAPS}" target="_blank" rel="noopener">${ic("pin")} Rota</a>
 </div>
 <div class="ck" id="ck" role="dialog" aria-label="Cookies"><p>Usamos cookies para medir visitas e anúncios. Veja a <a href="/privacidade">Política de Privacidade</a>.</p><div class="b"><button class="btn btn-red" type="button" data-ck="yes">Aceitar</button><button class="btn" type="button" data-ck="no">Recusar</button></div></div>
 <script src="/assets/js/config.js?v=${V}"></script>
@@ -169,6 +180,29 @@ ${body}
 </body>
 </html>`;
 }
+
+const TRUST = [["shield", "Atendimento<br>direto"], ["bolt", "Orçamento antes<br>do reparo"], ["pin", "Aqui no<br>Campo de Santana"]];
+const trust = () => `<ul class="trust">${TRUST.map(([i, t]) => `<li>${ic(i)}<span>${t}</span></li>`).join("")}</ul>`;
+function hero({ h1, lead, btns, img, m }) {
+  return `<section class="hero"><picture class="hero-bg">${m ? `<source media="(max-width:759px)" srcset="${IMG}${m}">` : ""}<img src="${IMG}${img}" alt="" width="1600" height="900" fetchpriority="high"></picture><div class="wrap hero-in"><div class="hero-txt"><h1>${h1}</h1><p class="lead">${lead}</p><div class="btns">${btns}</div>${trust()}</div></div></section>`;
+}
+const sh = (t, sub = "") => `<div class="shead"><h2>${t}</h2>${sub ? `<p>${sub}</p>` : ""}</div>`;
+const rowsSec = (title, items, alt = "") => `<section class="sec ${alt}"><div class="wrap">${sh(title)}${rows(items)}</div></section>`;
+const infobar = () => `<section class="infobar"><div class="wrap"><div class="ib">
+  <div>${ic("pin")}<div><h3>Nossa localização</h3><p>${ADDR.street}<br>${ADDR.hood}, ${ADDR.city}–${ADDR.uf}</p><a href="${MAPS}" target="_blank" rel="noopener">Ver no Google Maps</a></div></div>
+  <div>${ic("clock")}<div><h3>Horário de atendimento</h3><p>${HOURS.slice(0, 2).map(([d, h]) => `${d}: ${NB(h)}`).join("<br>")}<br>Domingo: fechado</p></div></div>
+  <div>${ic("box")}<div><h3>Ponto Shopee</h3><p>Coleta, envio e devolução de encomendas Shopee na loja.</p></div></div>
+</div></div></section>`;
+const CARDS = [
+  ["/conserto-de-celular", "Conserto de celular", "Troca de tela, bateria, conector de carga e mais.", "card-celular.png", ""],
+  ["/formatacao-notebook-computador", "Formatação de notebook e PC", "Formatação para deixar o equipamento pronto.", "card-notebook.png", ""],
+  ["/impressao-xerox-plastificacao", "Impressões e serviços rápidos", "Documentos, xerox, plastificação, foto 3×4.", "card-impressao.png", ""],
+  ["/personalizados", "Personalizados", "Canecas, azulejos, copos, chaveiros e mais.", "card-personalizados.png", ""],
+  [wa("Olá! Vim pelo site e quero saber sobre acessórios."), "Acessórios", "Carregadores, cabos, películas e capinhas, conforme o estoque.", "card-acessorios.png", ' target="_blank" rel="noopener" data-track="card-acessorios"'],
+];
+const cards = () => `<div class="cards">${CARDS.map(([h, t, d, img, x]) => `<a class="card" href="${h}"${x}><div class="ct"><h3>${t}</h3><p>${d}</p></div><img src="${IMG}${img}" alt="" width="600" height="600" loading="lazy"><span class="go">${ic("arrow")}</span></a>`).join("")}</div>`;
+const promo = () => `<section class="sec promo-s"><div class="wrap"><div class="promo"><picture><source media="(max-width:759px)" srcset="${IMG}promo-personalizados-m.jpg"><img src="${IMG}promo-personalizados.jpg" alt="" width="1600" height="500" loading="lazy"></picture><div class="pt"><h2>Presentes personalizados para todas as ocasiões</h2><ul class="chk2"><li>Canecas personalizadas</li><li>Azulejos</li><li>Copos e taças</li><li>Chaveiros</li><li>Brindes e lembranças</li></ul><a class="btn btn-red" href="/personalizados">Ver personalizados</a></div></div></div></section>`;
+const waBtn = (t, tr, label = "Chamar no WhatsApp") => `<a class="btn btn-wa" href="${wa(t)}" data-track="${tr}">${ic("chat")} ${label}</a>`;
 
 const pages = [];
 const add = (p) => pages.push(p);
@@ -191,33 +225,15 @@ add({
   desc: "Conserto de celular, formatação de notebook, impressões, personalizados e ponto Shopee no Campo de Santana, em Curitiba. Peça seu orçamento pelo WhatsApp.",
   ld: [localBusiness(), faqLD(homeFaq)],
   body: `
-<section class="hero"><div class="wrap">
-  <div class="grid">
-    <div>
-      <h1>Conserto de <em>celular</em> e serviços rápidos no Campo&nbsp;de&nbsp;Santana.</h1>
-      <p class="lead">Troca de tela, bateria e conector de carga, formatação de notebook, impressões e personalizados. Peça o orçamento pelo site e traga o aparelho quando combinarmos.</p>
-      <ul class="chips"><li>Orçamento antes do reparo</li><li>Você autoriza antes de começar</li><li>Loja física no Campo de Santana</li></ul>
-      <div class="btns"><a class="btn btn-red" href="/orcamento">Pedir orçamento</a>${WAG("Olá! Vim pelo site da Moby Cell e quero um orçamento.", "hero")}</div>
-    </div>
-    <div class="panel"><h2>Como funciona o conserto</h2>
-      ${rows([["Você descreve o problema", "Pelo site, pelo WhatsApp ou na loja."], ["Avaliação e orçamento", "Dizemos o que dá para consertar no seu modelo."], ["Você autoriza", "Nada é feito sem o seu “pode fazer”."], ["Reparo, testes e entrega", "Acompanhamos pela ordem de serviço."]])}
-    </div>
-  </div>
-  ${facts()}
-</div></section>
+${hero({ img: "hero-home.jpg", m: "hero-home-m.jpg",
+  h1: "Conserto de celular e serviços rápidos em <em>Campo&nbsp;de&nbsp;Santana</em>",
+  lead: "Troca de tela, bateria e conector de carga, formatação de notebook, impressões e personalizados, com orçamento antes de qualquer reparo.",
+  btns: `<a class="btn btn-red" href="${wa("Olá! Vim pelo site da Moby Cell e quero um orçamento.")}" data-track="hero">${ic("chat")} Solicitar orçamento pelo WhatsApp ${ic("arrow")}</a><a class="btn btn-o" href="/contato">${ic("pin")} Como chegar à loja</a>` })}
 
-<section class="sec"><div class="wrap">
-  ${folio(1, "Serviços")}
-  <h2 style="margin-bottom:clamp(24px,4vw,48px)">Tudo o que o bairro precisa, num só&nbsp;lugar.</h2>
-  <ul class="index">
-    <li><a href="/conserto-de-celular"><span class="n">01</span><h3>Conserto de celular</h3><p>Avaliação, orçamento e reparo. Troca de tela, bateria, conector de carga e mais, conforme o modelo.</p><span class="go">Como funciona →</span></a></li>
-    <li><a href="/formatacao-notebook-computador"><span class="n">02</span><h3>Formatação de notebook e PC</h3><p>Formatação de notebooks e computadores para deixar o equipamento pronto para uso.</p><span class="go">Saiba mais →</span></a></li>
-    <li><a href="/impressao-xerox-plastificacao"><span class="n">03</span><h3>Impressões e serviços rápidos</h3><p>Documentos, xerox, digitalização, plastificação e foto 3×4. Envie o arquivo pelo WhatsApp.</p><span class="go">Saiba mais →</span></a></li>
-    <li><a href="/personalizados"><span class="n">04</span><h3>Personalizados</h3><p>Canecas, azulejos, copos, chaveiros, adesivos, cartões e brindes, em unidade ou em quantidade.</p><span class="go">Ver produtos →</span></a></li>
-    <li class="plain"><div><span class="n">05</span><h3>Ponto Shopee</h3><p>Coleta, envio e devolução de encomendas Shopee na loja.</p></div></li>
-    <li class="plain"><div><span class="n">06</span><h3>Acessórios</h3><p>Carregadores, cabos USB e para iPhone, e também películas e capinhas, conforme o estoque.</p></div></li>
-  </ul>
-</div></section>
+<section class="sec"><div class="wrap">${sh("Nossos <em>serviços</em>", "Soluções em tecnologia, impressão e personalizados.")}${cards()}</div></section>
+${promo()}
+${infobar()}
+${rowsSec("Como funciona o conserto", [["Você descreve o problema", "Pelo site, pelo WhatsApp ou na loja."], ["Avaliação e orçamento", "Dizemos o que dá para consertar no seu modelo."], ["Você autoriza", "Nada é feito sem o seu “pode fazer”."], ["Reparo, testes e entrega", "Acompanhamos pela ordem de serviço."]])}
 
 <section class="sec alt"><div class="wrap">
   ${folio(2, "Avaliações no Google", "Texto original dos clientes")}
@@ -254,19 +270,11 @@ add({
   ld: [localBusiness(), serviceLD("Conserto de celular", "Conserto de celular"), crumbLD([["Início", "/"], ["Conserto de celular", "/conserto-de-celular"]]), faqLD(celFaq)],
   body: `
 ${crumbs("Conserto de celular")}
-<section class="hero"><div class="wrap">
-  <div class="grid">
-    <div>
-      <h1>Conserto de celular com orçamento claro <em>antes</em> de começar.</h1>
-      <p class="lead">Tela quebrada, bateria que não dura ou celular que não carrega? Descreva o problema e receba o orçamento. Você só autoriza o reparo se concordar.</p>
-      <div class="btns"><a class="btn btn-red" href="#orcamento">Pedir orçamento</a>${WAG("Olá! Quero um orçamento de conserto de celular. Modelo: ", "celular-hero")}</div>
-    </div>
-    <div class="panel"><h2>Reparos mais comuns</h2>
-      ${rows([["Troca de tela", "Conforme o modelo e a peça."], ["Troca de bateria", "Para o aparelho voltar a durar."], ["Conector de carga", "Quando o celular não carrega direito."]])}
-    </div>
-  </div>
-  ${facts()}
-</div></section>
+${hero({ img: "hero-celular.jpg",
+  h1: "Conserto de celular com orçamento claro <em>antes de começar</em>",
+  lead: "Tela quebrada, bateria que não dura ou celular que não carrega? Descreva o problema e receba o orçamento. Você só autoriza o reparo se concordar.",
+  btns: `<a class="btn btn-red" href="#orcamento">Pedir orçamento</a>${waBtn("Olá! Quero um orçamento de conserto de celular. Modelo: ", "celular-hero")}` })}
+${rowsSec("Reparos mais comuns", [["Troca de tela", "Conforme o modelo e a peça."], ["Troca de bateria", "Para o aparelho voltar a durar."], ["Conector de carga", "Quando o celular não carrega direito."]])}
 
 <section class="sec"><div class="wrap">
   ${folio(1, "Como funciona")}
@@ -284,6 +292,7 @@ ${crumbs("Conserto de celular")}
   ${form("celular", "orcamento", "Orçamento de conserto de celular")}
 </div></section>
 
+${infobar()}
 <section class="sec"><div class="wrap">${folio(3, "Perguntas frequentes", "")}${faq(celFaq)}${more("/conserto-de-celular")}</div></section>`,
 });
 
@@ -302,25 +311,18 @@ add({
   ld: [localBusiness(), serviceLD("Formatação de notebook e computador", "Formatação de notebook e computador"), crumbLD([["Início", "/"], ["Formatação de notebook e computador", "/formatacao-notebook-computador"]]), faqLD(fmtFaq)],
   body: `
 ${crumbs("Formatação de notebook e computador")}
-<section class="hero"><div class="wrap">
-  <div class="grid">
-    <div>
-      <h1>Formatação de <em>notebook</em> e computador.</h1>
-      <p class="lead">Procurando onde formatar notebook perto de você? Fazemos a formatação do seu notebook ou computador na loja, no Campo de Santana.</p>
-      <div class="btns"><a class="btn btn-red" href="#orcamento">Pedir orçamento</a>${WAG("Olá! Quero um orçamento de formatação. Equipamento: ", "formatacao-hero")}</div>
-    </div>
-    <div class="panel"><h2>O que você precisa saber</h2>
-      ${rows([["Serviço: formatação", "Notebooks e computadores."], ["Faça backup antes", "Backup de arquivos não está incluído."], ["Só formatação", "Não fazemos reparo de hardware."]])}
-    </div>
-  </div>
-  ${facts()}
-</div></section>
+${hero({ img: "hero-formatacao.jpg",
+  h1: "Formatação de <em>notebook e computador</em>",
+  lead: "Procurando onde formatar notebook perto de você? Fazemos a formatação do seu notebook ou computador na loja, no Campo de Santana.",
+  btns: `<a class="btn btn-red" href="#orcamento">Pedir orçamento</a>${waBtn("Olá! Quero um orçamento de formatação. Equipamento: ", "formatacao-hero")}` })}
+${rowsSec("O que você precisa saber", [["Serviço: formatação", "Notebooks e computadores."], ["Faça backup antes", "Backup de arquivos não está incluído."], ["Só formatação", "Não fazemos reparo de hardware."]])}
 <section class="sec alt"><div class="wrap two">
   <div>${folio(1, "Orçamento", "")}<h2>Peça o orçamento da formatação.</h2>
     <p class="lead" style="margin-top:20px">Informe o modelo do equipamento e o que você espera do serviço.</p>
     <p class="note">Este serviço é exclusivamente <b>formatação</b>. Não realizamos troca de peças, reparo de placa, tela ou outros consertos em notebooks e computadores.</p></div>
   ${form("formatacao", "orcamento", "Orçamento de formatação")}
 </div></section>
+${infobar()}
 <section class="sec"><div class="wrap">${folio(2, "Perguntas frequentes", "")}${faq(fmtFaq)}${more("/formatacao-notebook-computador")}</div></section>`,
 });
 
@@ -339,25 +341,18 @@ add({
   ld: [localBusiness(), serviceLD("Impressão, xerox e plastificação", "Impressão, xerox, digitalização e plastificação"), crumbLD([["Início", "/"], ["Impressões e serviços rápidos", "/impressao-xerox-plastificacao"]]), faqLD(impFaq)],
   body: `
 ${crumbs("Impressões e serviços rápidos")}
-<section class="hero"><div class="wrap">
-  <div class="grid">
-    <div>
-      <h1>Impressão, xerox e <em>plastificação</em> perto de você.</h1>
-      <p class="lead">Serviços rápidos para o dia a dia: documentos, trabalhos escolares, currículos e muito mais. Envie o arquivo pelo WhatsApp e consulte a disponibilidade.</p>
-      <div class="btns">${WAG("Olá! Quero imprimir um arquivo. Vou enviar aqui.", "impressao-hero")}<a class="btn" href="#orcamento">Pedir informações</a></div>
-    </div>
-    <div class="panel"><h2>Serviços rápidos</h2>
-      ${rows([["Impressão", "Preto e branco e colorida."], ["Xerox e digitalização", "Cópias e arquivos digitais."], ["Plastificação", "Proteção para documentos."], ["Foto 3×4", "Consulte a disponibilidade."]])}
-    </div>
-  </div>
-  ${facts()}
-</div></section>
+${hero({ img: "hero-impressao.jpg",
+  h1: "Impressão, xerox e <em>plastificação</em> perto de você",
+  lead: "Serviços rápidos para o dia a dia: documentos, trabalhos escolares, currículos e muito mais. Envie o arquivo pelo WhatsApp e consulte a disponibilidade.",
+  btns: `${waBtn("Olá! Quero imprimir um arquivo. Vou enviar aqui.", "impressao-hero", "Enviar arquivo no WhatsApp")}<a class="btn btn-o" href="#orcamento">Pedir informações</a>` })}
+${rowsSec("Serviços rápidos", [["Impressão", "Preto e branco e colorida."], ["Xerox e digitalização", "Cópias e arquivos digitais."], ["Plastificação", "Proteção para documentos."], ["Foto 3×4", "Consulte a disponibilidade."]])}
 <section class="sec alt"><div class="wrap two">
   <div>${folio(1, "Como pedir", "")}<h2>Simples e&nbsp;rápido.</h2>
     <ul class="list"><li>Chame no WhatsApp e envie o arquivo</li><li>Confirmamos a disponibilidade e as condições</li><li>Você passa na loja para retirar</li></ul>
     <p>Realizamos impressões de documentos, xerox e plastificação no Campo de Santana. Consulte disponibilidade e informações pelo WhatsApp.</p></div>
   ${form("impressao", "orcamento", "Peça informações", "Diga o que precisa imprimir. Depois abrimos o WhatsApp para você enviar o arquivo.")}
 </div></section>
+${infobar()}
 <section class="sec"><div class="wrap">${folio(2, "Perguntas frequentes", "")}${faq(impFaq)}${more("/impressao-xerox-plastificacao")}</div></section>`,
 });
 
@@ -376,19 +371,11 @@ add({
   ld: [localBusiness(), serviceLD("Produtos personalizados", "Produtos personalizados"), crumbLD([["Início", "/"], ["Personalizados", "/personalizados"]]), faqLD(perFaq)],
   body: `
 ${crumbs("Personalizados")}
-<section class="hero"><div class="wrap">
-  <div class="grid">
-    <div>
-      <h1>Personalizados para presentear, divulgar e <em>celebrar</em>.</h1>
-      <p class="lead">Canecas, azulejos, copos, chaveiros, cartões e brindes com a sua arte. Uma unidade ou muitas, para você, sua escola ou sua empresa.</p>
-      <div class="btns"><a class="btn btn-red" href="#orcamento">Pedir orçamento</a>${WAG("Olá! Quero um orçamento de produto personalizado. Produto e quantidade: ", "personalizados-hero")}</div>
-    </div>
-    <div class="panel"><h2>Para quem</h2>
-      ${rows([["Presentes e lembrancinhas", "Datas comemorativas e eventos."], ["Escolas", "Pedidos em quantidade."], ["Empresas", "Brindes e materiais gráficos."]])}
-    </div>
-  </div>
-  ${facts()}
-</div></section>
+${hero({ img: "hero-personalizados.jpg",
+  h1: "Personalizados para <em>presentear e celebrar</em>",
+  lead: "Canecas, azulejos, copos, chaveiros, cartões e brindes com a sua arte. Uma unidade ou muitas, para você, sua escola ou sua empresa.",
+  btns: `<a class="btn btn-red" href="#orcamento">Pedir orçamento</a>${waBtn("Olá! Quero um orçamento de produto personalizado. Produto e quantidade: ", "personalizados-hero")}` })}
+${rowsSec("Para quem", [["Presentes e lembrancinhas", "Datas comemorativas e eventos."], ["Escolas", "Pedidos em quantidade."], ["Empresas", "Brindes e materiais gráficos."]])}
 <section class="sec"><div class="wrap">
   ${folio(1, "Produtos")}
   <h2>O que produzimos.</h2>
@@ -400,6 +387,7 @@ ${crumbs("Personalizados")}
     <p class="note">Em alguns pedidos solicitamos entrada antecipada. As condições são combinadas no orçamento.</p></div>
   ${form("personalizados", "orcamento", "Orçamento de personalizados")}
 </div></section>
+${infobar()}
 <section class="sec"><div class="wrap">${folio(3, "Perguntas frequentes", "")}${faq(perFaq)}${more("/personalizados")}</div></section>`,
 });
 
@@ -411,10 +399,10 @@ add({
   ld: [localBusiness(true), crumbLD([["Início", "/"], ["Sobre", "/sobre"]])],
   body: `
 ${crumbs("Sobre")}
-<section class="hero"><div class="wrap">
-  <h1 style="max-width:12em">Uma loja de bairro que resolve o seu <em>dia a dia</em>.</h1>
-  <p class="lead" style="margin-top:28px">A Moby Cell é uma assistência técnica de celulares e loja de serviços rápidos no Campo de Santana, em Curitiba, conduzida por Alison e Júlia.</p>
-</div></section>
+${hero({ img: "hero-loja.jpg",
+  h1: "Uma loja de bairro que resolve o seu <em>dia a dia</em>",
+  lead: "A Moby Cell é uma assistência técnica de celulares e loja de serviços rápidos no Campo de Santana, em Curitiba, conduzida por Alison e Júlia.",
+  btns: `<a class="btn btn-red" href="/orcamento">Pedir orçamento</a><a class="btn btn-o" href="/contato">${ic("pin")} Como chegar</a>` })}
 <section class="sec"><div class="wrap two">
   <div>${folio(1, "Quem somos", "")}
     <p>Aqui você encontra conserto de celular, formatação de notebooks e computadores, impressões, xerox e plastificação, produtos personalizados, acessórios e o ponto de coleta, envio e devolução da Shopee.</p>
