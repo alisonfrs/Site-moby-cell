@@ -8,5 +8,8 @@ window.MOBY = {
   ga4: "",
   adsId: "",
   // Rótulo da conversão de lead no Google Ads (ex.: "AbCdEfGhIj")
-  adsLeadLabel: ""
+  adsLeadLabel: "",
+  // Rótulos das conversões de clique na página inicial (WhatsApp e Ligar)
+  adsWhatsappLabel: "",
+  adsCallLabel: ""
 };

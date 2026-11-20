@@ -225,7 +225,9 @@ const homeFaq = [
   ["Quais as formas de pagamento?", "Dinheiro, cartão e Pix."],
 ];
 add({
-  path: "/", file: "index.html", current: "",
+  // A página inicial é feita à mão em public/index.html (visual novo). Aqui fica só
+  // para o sitemap; o build não sobrescreve o arquivo.
+  path: "/", file: "index.html", current: "", static: true,
   title: "Moby Cell | Assistência Técnica de Celulares em Curitiba",
   desc: "Assistência técnica de celulares, formatação de computadores, impressões e personalizados no Campo de Santana, em Curitiba. Peça seu orçamento pelo WhatsApp.",
   ld: [localBusiness(), faqLD(homeFaq)],
@@ -484,6 +486,7 @@ add({
 });
 
 for (const p of pages) {
+  if (p.static) continue;
   const f = join(OUT, p.file);
   mkdirSync(dirname(f), { recursive: true });
   writeFileSync(f, layout(p));
