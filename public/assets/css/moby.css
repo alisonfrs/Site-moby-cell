@@ -138,3 +138,9 @@ h1,h2,h3{font-family:var(--display);font-weight:800;letter-spacing:-.02em}
 .index>li>a:hover{border-color:var(--red);transform:translateY(-2px)}
 .index .n{flex-shrink:0;display:grid;place-items:center;width:38px;height:38px;border-radius:999px;background:var(--red);color:#fff;font-weight:700;font-size:14px}
 .index h3{margin:0;font-size:16px;line-height:1.25}
+
+/* Nota do Google na abertura */
+.g-rating{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px;font-weight:600;color:#fff;text-decoration:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:6px 14px;border-radius:999px;margin:0 0 18px}
+.g-rating b{font-size:15px}
+.g-rating .st{color:#ffc21a;letter-spacing:1px}
+.g-rating:hover{background:rgba(255,255,255,.14)}

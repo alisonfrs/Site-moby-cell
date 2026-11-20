@@ -86,6 +86,11 @@ svg{flex-shrink:0}
 .badges li:first-child{padding-left:0}
 .badges li+li{border-left:1px solid rgba(255,255,255,.3)}
 .badges svg{color:var(--red-2)}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}.hero-meta>*{margin:0!important}
+.g-rating{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px;font-weight:600;color:#fff;text-decoration:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:6px 14px;border-radius:999px;margin:0 0 18px}
+.g-rating b{font-size:15px}
+.g-rating .st{color:#ffc21a;letter-spacing:1px}
+.g-rating:hover{background:rgba(255,255,255,.14)}
 .open-now{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:6px 12px;border-radius:999px;margin-bottom:18px}
 .open-now i{width:8px;height:8px;border-radius:50%;background:#9a9aa5}
 .open-now.is-open i{background:#2bd65a;box-shadow:0 0 0 4px rgba(43,214,90,.2)}
@@ -364,7 +369,8 @@ details p{margin:0 0 14px;color:var(--muted)}
     </div>
     <div class="wrap">
       <div class="hero-copy">
-        <span class="open-now" id="openNow" hidden><i></i><span></span></span>
+        <div class="hero-meta"><a class="g-rating" href="https://www.google.com/maps/place/Moby+Cell+Assistencia+t%C3%A9cnica+Celulares/@-25.5840198,-49.3230281,17z/data=!4m6!3m5!1s0x94dcfc2a0990a4cf:0x7839fd71f4723732!8m2!3d-25.5840247!4d-49.3204532!16s%2Fg%2F11q484tv8z" target="_blank" rel="noopener" aria-label="Nota 4,8 de 5 com 44 avaliações no Google"><b>4,8</b><span class="st" aria-hidden="true">★★★★★</span><span>44 avaliações no Google</span></a>
+        <span class="open-now" id="openNow" hidden><i></i><span></span></span></div>
         <h1>Assistência Técnica de Celulares em <span class="hl">Campo de Santana</span></h1>
         <p class="lead">Conserto, manutenção e troca de peças com atendimento de confiança e orçamento rápido.</p>
         <div class="ctas">
@@ -472,7 +478,7 @@ details p{margin:0 0 14px;color:var(--muted)}
       <div class="more">
         <div class="panel">
           <h2>O que dizem <span>nossos clientes</span></h2>
-          <p class="rv-note">Avaliações no Google, no texto original.</p>
+          <p class="rv-note"><b style="color:var(--text)">4,8 ★ · 44 avaliações no Google.</b> Algumas, no texto original:</p>
           <figure class="rev"><div class="stars" aria-label="5 de 5 estrelas">★★★★★</div><blockquote>Excelente trabalho, meu celular foi detonado e voltou brilhando. E o Alisson é um rapaz simpático, atento a todas as nossas perguntas.</blockquote><figcaption>Selene Domingues · Google</figcaption></figure>
           <figure class="rev"><div class="stars" aria-label="5 de 5 estrelas">★★★★★</div><blockquote>Ótimo atendimento, agilidade e qualidade!</blockquote><figcaption>Edina Oliveira · Google</figcaption></figure>
           <figure class="rev"><div class="stars" aria-label="5 de 5 estrelas">★★★★★</div><blockquote>Extremamente atencioso.</blockquote><figcaption>Jeverton · Google</figcaption></figure>
