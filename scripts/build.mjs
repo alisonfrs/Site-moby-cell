@@ -195,6 +195,7 @@ add({
     <div>
       <h1>Conserto de <em>celular</em> e serviços rápidos no Campo&nbsp;de&nbsp;Santana.</h1>
       <p class="lead">Troca de tela, bateria e conector de carga, formatação de notebook, impressões e personalizados. Peça o orçamento pelo site e traga o aparelho quando combinarmos.</p>
+      <ul class="chips"><li>Orçamento antes do reparo</li><li>Você autoriza antes de começar</li><li>Loja física no Campo de Santana</li></ul>
       <div class="btns"><a class="btn btn-red" href="/orcamento">Pedir orçamento</a>${WAG("Olá! Vim pelo site da Moby Cell e quero um orçamento.", "hero")}</div>
     </div>
     <div class="panel"><h2>Como funciona o conserto</h2>
