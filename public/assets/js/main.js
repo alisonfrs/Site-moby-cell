@@ -121,7 +121,7 @@
       };
       // Com WhatsApp informado, o pedido também é registrado no sistema da loja.
       if (!tel || !C.leadEndpoint) return done();
-      var body = Object.assign({}, { nome: nome, telefone: tel, servico: k, aparelho: device(f, k), mensagem: linhas.join(" | ").slice(0, 900) }, attr, { pagina: location.pathname, website: "" });
+      var body = Object.assign({}, { nome: nome, telefone: tel, servico: k, aparelho: device(f, k), mensagem: linhas.join(" | ").slice(0, 900) }, attr, { pagina: location.pathname, website: "", session_id: window.mobySession ? window.mobySession() : undefined, device: window.matchMedia("(max-width: 860px)").matches ? "mobile" : "desktop" });
       var ctl = window.AbortController ? new AbortController() : null;
       var t = setTimeout(function () { if (ctl) ctl.abort(); }, 6000);
       fetch(C.leadEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined })

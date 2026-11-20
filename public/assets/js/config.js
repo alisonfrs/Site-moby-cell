@@ -4,6 +4,8 @@ window.MOBY = {
   whatsapp: "5541991332951",
   // Endpoint que grava o orçamento como lead no Moby Control (Supabase Edge Function).
   leadEndpoint: "https://jnkqdavjvgmwplzzfldj.supabase.co/functions/v1/site-lead",
+  // Visitas e cliques (sem dados pessoais), vistos no Moby Control em Clientes > Site e orçamentos.
+  eventEndpoint: "https://jnkqdavjvgmwplzzfldj.supabase.co/functions/v1/site-event",
   // Google Analytics 4 (ex.: "G-XXXXXXXXXX") e Google Ads (ex.: "AW-1234567890")
   ga4: "",
   adsId: "",

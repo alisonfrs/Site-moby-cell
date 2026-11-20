@@ -1,7 +1,8 @@
 // Gera as páginas HTML em /public. Uso: node scripts/build.mjs
 // Todo o conteúdo do site está neste arquivo. Regras do dossiê da Moby Cell:
 // sem preços de impressão/xerox/plastificação, sem camisetas, formatação como único serviço de computador,
-// sem promessas de prazo/garantia/horário que não foram confirmados, sem dados financeiros internos.
+// sem promessas de prazo/horário que não foram confirmados, sem dados financeiros internos.
+// Garantia confirmada pelo dono em 20/11/2026: de até 1 ano, conforme a peça e o serviço (sempre com essa ressalva).
 // Direção visual: Swiss (ver public/assets/css/style.css).
 import { writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -213,7 +214,7 @@ ${body}
 
 // Nota do Perfil da Empresa no Google (conferida em 20/11/2026). Atualizar quando mudar.
 const GRATING = `<a class="g-rating" href="https://www.google.com/maps/place/Moby+Cell+Assistencia+t%C3%A9cnica+Celulares/@-25.5840198,-49.3230281,17z/data=!4m6!3m5!1s0x94dcfc2a0990a4cf:0x7839fd71f4723732!8m2!3d-25.5840247!4d-49.3204532!16s%2Fg%2F11q484tv8z" target="_blank" rel="noopener" aria-label="Nota 4,8 de 5 com 44 avaliações no Google"><b>4,8</b><span class="st" aria-hidden="true">★★★★★</span><span>44 avaliações no Google</span></a>`;
-const TICKS = ["Loja física no bairro", "Orçamento antes do reparo", "Atendimento presencial e pelo WhatsApp"];
+const TICKS = ["Garantia de até 1 ano, conforme a peça e o serviço", "Orçamento antes do reparo", "Loja física no bairro, atendimento também pelo WhatsApp"];
 function hero({ h1, lead, btns, img, alt = "", badge = "Orçamento antes do reparo" }) {
   return `<section class="hero"><div class="wrap hero-grid"><div class="hero-txt">${GRATING}<h1>${h1}</h1><p class="lead">${lead}</p><div class="btns">${btns}</div><ul class="ticks">${TICKS.map((t) => `<li>${ic("check")}${t}</li>`).join("")}</ul></div><div class="hero-vis${(HERO_IMG[img] || [])[3] ? " contain" : ""}"><img src="${HERO_IMG[img] ? "/assets/img/home/" + HERO_IMG[img][0] : IMG + img}" alt="${alt}" width="${HERO_IMG[img] ? HERO_IMG[img][1] : 1200}" height="${HERO_IMG[img] ? HERO_IMG[img][2] : 900}" fetchpriority="high"><span class="badge">${ic("shield")} ${badge}</span></div></div></section>`;
 }
@@ -287,6 +288,7 @@ const celFaq = [
   ["Quanto tempo leva?", "O prazo depende do defeito e da peça. Informamos o prazo estimado junto com o orçamento, sem prometer antes da avaliação."],
   ["Preciso levar o celular à loja?", "Para avaliar com segurança, o aparelho precisa passar pela loja. Você pode adiantar tudo pelo WhatsApp e combinar a visita."],
   ["Vocês atendem a domicílio?", "Não. O atendimento é na loja, no Campo de Santana."],
+  ["O conserto tem garantia?", "Sim. A garantia é de até 1 ano e varia conforme a peça e o serviço. O prazo de garantia do seu conserto é informado no orçamento."],
   ["Como acompanho meu reparo?", "O aparelho fica registrado em uma ordem de serviço, e o andamento é informado a você durante o atendimento."],
 ];
 add({
@@ -501,6 +503,7 @@ add({
   <p>Os dados enviados pelo formulário ficam no sistema de gestão da loja, hospedado em provedor de nuvem. Não vendemos seus dados. A conversa pelo WhatsApp é tratada pela plataforma da Meta, conforme a política dela.</p>
   <h2 ${h2p}>4. Cookies e medição</h2>
   <p>Se você aceitar, usamos cookies do Google (Analytics e Google Ads) para medir visitas e a eficácia dos anúncios. Se recusar, o site funciona normalmente, sem esses cookies.</p>
+  <p>Independentemente dos cookies, contamos as visitas e os cliques nos botões (WhatsApp, Ligar, Rota) de forma anônima: guardamos só a página, o tipo de clique, a origem da visita (por exemplo, Google ou Instagram) e um código aleatório que dura enquanto a aba estiver aberta. Não guardamos nome, telefone, endereço de IP nem cookies para isso.</p>
   <h2 ${h2p}>5. Seus direitos</h2>
   <p>Pela Lei Geral de Proteção de Dados (Lei nº 13.709/2018), você pode pedir acesso, correção ou exclusão dos seus dados. Basta nos chamar pelo <a href="${wa("Olá! Quero exercer meus direitos sobre dados pessoais (LGPD).")}">WhatsApp (41)&nbsp;99133-2951</a>.</p>
   <h2 ${h2p}>6. Atualizações</h2>
