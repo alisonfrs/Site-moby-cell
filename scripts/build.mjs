@@ -35,6 +35,24 @@ const I = {
 };
 const ic = (n) => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true" focusable="false">${I[n]}</svg>`;
 
+const TNAV = [
+  ["/", "Início"],
+  ["/conserto-de-celular", "Assistência Técnica"],
+  ["/formatacao-notebook-computador", "Formatação"],
+  ["/impressao-xerox-plastificacao", "Impressões"],
+  ["/personalizados", "Personalizados"],
+  ["/#servicos", "Acessórios"],
+  ["/contato", "Contato"],
+];
+const WAI = (n) => `<svg width="${n}" height="${n}" viewBox="0 0 32 32" aria-hidden="true"><path fill="currentColor" d="M16.04 3C8.86 3 3.04 8.82 3.04 16c0 2.29.6 4.53 1.74 6.5L3 29l6.68-1.75A12.94 12.94 0 0 0 16.04 29C23.22 29 29 23.18 29 16S23.22 3 16.04 3zm0 23.62c-1.98 0-3.92-.53-5.61-1.54l-.4-.24-3.97 1.04 1.06-3.87-.26-.4a10.6 10.6 0 0 1-1.63-5.6c0-5.86 4.77-10.63 10.64-10.63 5.86 0 10.6 4.77 10.6 10.63 0 5.86-4.77 10.61-10.43 10.61zm5.83-7.95c-.32-.16-1.89-.93-2.18-1.04-.29-.11-.5-.16-.72.16-.21.32-.82 1.04-1 1.25-.19.21-.37.24-.69.08-.32-.16-1.35-.5-2.57-1.59-.95-.85-1.59-1.9-1.78-2.22-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.72-1.73-.98-2.37-.26-.62-.52-.54-.72-.55h-.61c-.21 0-.56.08-.85.4-.29.32-1.11 1.09-1.11 2.66s1.14 3.08 1.3 3.29c.16.21 2.24 3.42 5.43 4.8.76.33 1.35.52 1.81.67.76.24 1.45.21 2 .13.61-.09 1.89-.77 2.15-1.52.27-.74.27-1.38.19-1.52-.08-.13-.29-.21-.61-.37z"/></svg>`;
+// Fotos das aberturas: recortes da arte nova (public/assets/img/home). "contain" = foto de produto sobre fundo escuro.
+const HERO_IMG = {
+  "hero-celular.jpg": ["hero.webp", 1198, 864, false],
+  "hero-loja.jpg": ["hero.webp", 1198, 864, false],
+  "hero-formatacao.jpg": ["notebook.webp", 416, 242, true],
+  "hero-impressao.jpg": ["impressora.webp", 402, 242, true],
+  "hero-personalizados.jpg": ["canecas.webp", 1100, 376, true],
+};
 const NAV = [
   ["/conserto-de-celular", "Conserto de celular"],
   ["/formatacao-notebook-computador", "Formatação"],
@@ -130,8 +148,6 @@ function form(service = "", id = "form", title = "Peça seu orçamento", sub = "
 
 function layout({ path, title, desc, body, ld = [], index = true, current }) {
   const url = SITE + (path === "/" ? "/" : path);
-  const nav = NAV.map(([h, t]) => `<a href="${h}"${h === current ? ' aria-current="page"' : ""}>${t}</a>`).join("");
-  const mnav = NAV.map(([h, t]) => `<a href="${h}">${t}</a>`).join("");
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -141,7 +157,7 @@ function layout({ path, title, desc, body, ld = [], index = true, current }) {
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${url}">
 ${index ? "" : '<meta name="robots" content="noindex,follow">'}
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#0b0b0d">
 <meta name="color-scheme" content="light">
 <link rel="icon" href="/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="/assets/img/icon-192.png">
@@ -150,16 +166,25 @@ ${index ? "" : '<meta name="robots" content="noindex,follow">'}
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}">
 <meta property="og:url" content="${url}"><meta property="og:image" content="${SITE}/assets/img/og.png">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="/assets/css/style.css?v=${V}">
+<link rel="stylesheet" href="/assets/css/moby.css?v=${V}">
 ${ld.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script>`).join("\n")}
 </head>
 <body>
 <a class="skip" href="#main">Ir para o conteúdo</a>
-<header class="hd"><div class="wrap">
-  <a class="brand" href="/" translate="no"><img src="/assets/img/icon-192.png" width="40" height="40" alt=""><span class="bt"><span class="bn">Moby&nbsp;<b>Cell</b></span><small>Campo de Santana · Curitiba</small></span></a>
-  <nav class="nav" aria-label="Principal">${nav}<a class="cta" href="${wa("Olá! Vim pelo site da Moby Cell.")}" data-track="header">${ic("chat")} WhatsApp</a></nav>
-  <button class="burger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="mnav"><span></span></button>
-</div><nav class="mnav" id="mnav" aria-label="Menu">${mnav}<a href="/orcamento">Pedir orçamento</a></nav></header>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/" translate="no" aria-label="Moby Cell — início"><img src="/assets/img/home/logo-icon.svg" width="48" height="48" alt=""><span><b>Moby <span>Cell</span></b><small>Assistência Técnica e Serviços</small></span></a>
+  <nav class="tnav" aria-label="Principal">${TNAV.map(([h, t]) => `<a href="${h}"${h === current ? ' class="on" aria-current="page"' : ""}>${t}</a>`).join("")}</nav>
+  <a class="wa-pill" href="${wa("Olá! Vim pelo site da Moby Cell e gostaria de um orçamento.")}" data-track="header">${WAI(30)}<span><small>WhatsApp</small><strong>(41) 99133-2951</strong></span></a>
+  <button class="menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="drawer"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+</div></header>
+<div class="drawer" id="drawer" aria-hidden="true"><div class="bg" data-close></div><nav aria-label="Menu">
+  <button class="close" type="button" aria-label="Fechar menu" data-close><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></svg></button>
+  ${TNAV.map(([h, t]) => `<a href="${h}" data-close>${t}</a>`).join("")}<a href="/orcamento" data-close>Pedir orçamento</a><a href="/sobre" data-close>Sobre a loja</a>
+  <a class="btn btn-wa" href="${wa("Olá! Vim pelo site da Moby Cell e gostaria de um orçamento.")}" data-track="menu">${WAI(24)} Chamar no WhatsApp</a>
+</nav></div>
 <main id="main">
 ${body}
 </main>
@@ -172,20 +197,23 @@ ${body}
   </div>
   <p class="copy"><span translate="no">Moby Cell</span> · CNPJ 42.252.647/0001-50 · © ${new Date().getFullYear()}</p>
 </div></footer>
-<div class="mbar">
-  <a class="btn btn-red" href="${wa("Olá! Vim pelo site da Moby Cell.")}" data-track="barra-mobile">${ic("chat")} WhatsApp</a>
-  <a class="btn btn-o" href="${MAPS}" target="_blank" rel="noopener">${ic("pin")} Como chegar</a>
-</div>
+<a class="fab" href="${wa("Olá! Vim pelo site da Moby Cell e gostaria de um orçamento.")}" data-track="flutuante" aria-label="Falar no WhatsApp">${WAI(34)}</a>
+<nav class="dock" aria-label="Contato rápido">
+  <a class="dw" href="${wa("Olá! Vim pelo site da Moby Cell e gostaria de um orçamento.")}" data-track="barra-mobile">${WAI(30)}<span><small>WhatsApp</small><strong>(41) 99133-2951</strong></span></a>
+  <a href="tel:${TEL}">${ic("phone")} Ligar</a>
+  <a class="js-route" href="${MAPS}" target="_blank" rel="noopener">${ic("pin")} Rota</a>
+</nav>
 <div class="ck" id="ck" role="dialog" aria-label="Cookies"><p>Usamos cookies para medir visitas e anúncios. Veja a <a href="/privacidade">Política de Privacidade</a>.</p><div class="b"><button class="btn btn-red" type="button" data-ck="yes">Aceitar</button><button class="btn" type="button" data-ck="no">Recusar</button></div></div>
 <script src="/assets/js/config.js?v=${V}"></script>
 <script src="/assets/js/main.js?v=${V}" defer></script>
+<script src="/assets/js/moby.js?v=${V}" defer></script>
 </body>
 </html>`;
 }
 
 const TICKS = ["Loja física no bairro", "Orçamento antes do reparo", "Atendimento presencial e pelo WhatsApp"];
 function hero({ h1, lead, btns, img, alt = "", badge = "Orçamento antes do reparo" }) {
-  return `<section class="hero"><div class="wrap hero-grid"><div class="hero-txt"><h1>${h1}</h1><p class="lead">${lead}</p><div class="btns">${btns}</div><ul class="ticks">${TICKS.map((t) => `<li>${ic("check")}${t}</li>`).join("")}</ul></div><div class="hero-vis"><img src="${IMG}${img}" alt="${alt}" width="1200" height="900" fetchpriority="high"><span class="badge">${ic("shield")} ${badge}</span></div></div></section>`;
+  return `<section class="hero"><div class="wrap hero-grid"><div class="hero-txt"><h1>${h1}</h1><p class="lead">${lead}</p><div class="btns">${btns}</div><ul class="ticks">${TICKS.map((t) => `<li>${ic("check")}${t}</li>`).join("")}</ul></div><div class="hero-vis${(HERO_IMG[img] || [])[3] ? " contain" : ""}"><img src="${HERO_IMG[img] ? "/assets/img/home/" + HERO_IMG[img][0] : IMG + img}" alt="${alt}" width="${HERO_IMG[img] ? HERO_IMG[img][1] : 1200}" height="${HERO_IMG[img] ? HERO_IMG[img][2] : 900}" fetchpriority="high"><span class="badge">${ic("shield")} ${badge}</span></div></div></section>`;
 }
 const sh = (t, sub = "") => `<div class="shead"><h2>${t}</h2>${sub ? `<p>${sub}</p>` : ""}</div>`;
 const rowsSec = (title, items, alt = "") => `<section class="sec ${alt}"><div class="wrap">${sh(title)}${rows(items)}</div></section>`;
