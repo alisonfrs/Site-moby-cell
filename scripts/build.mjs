@@ -196,7 +196,7 @@ ${ld.map((o) => `<script type="application/ld+json">${JSON.stringify(o)}</script
 <body>
 <a class="skip" href="#main">Ir para o conteúdo</a>
 <header class="top"><div class="wrap">
-  <a class="brand" href="/" translate="no" aria-label="Moby Cell — início"><img src="/assets/img/home/logo-icon.svg" width="48" height="48" alt=""><span><b>Moby <span>Cell</span></b><small>Assistência Técnica e Serviços</small></span></a>
+  <a class="brand" href="/" translate="no" aria-label="Moby Cell — início"><img src="/assets/img/home/logo-icon.svg?v=2" width="48" height="48" alt=""><span><b>Moby <span>Cell</span></b><small>Assistência Técnica e Serviços</small></span></a>
   <nav class="tnav" aria-label="Principal">${TNAV.map(([h, t]) => `<a href="${h}"${h === current ? ' class="on" aria-current="page"' : ""}>${t}</a>`).join("")}</nav>
   <a class="wa-pill" href="${wa("Olá! Vim pelo site da Moby Cell e gostaria de um orçamento.")}" data-track="header">${WAI(30)}<span><small>WhatsApp</small><strong>(41) 99133-2951</strong></span></a>
   <button class="menu-btn" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="drawer"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg></button>
@@ -236,7 +236,7 @@ ${body}
 const GRATING = `<a class="g-rating" href="https://www.google.com/maps/place/Moby+Cell+Assistencia+t%C3%A9cnica+Celulares/@-25.5840198,-49.3230281,17z/data=!4m6!3m5!1s0x94dcfc2a0990a4cf:0x7839fd71f4723732!8m2!3d-25.5840247!4d-49.3204532!16s%2Fg%2F11q484tv8z" target="_blank" rel="noopener" aria-label="Nota 4,8 de 5 com 44 avaliações no Google"><b>4,8</b><span class="st" aria-hidden="true">★★★★★</span><span>44 avaliações no Google</span></a>`;
 const TICKS = ["Garantia de até 1 ano, conforme a peça e o serviço", "Orçamento antes do reparo", "Loja física no bairro, atendimento também pelo WhatsApp"];
 function hero({ h1, lead, btns, img, alt = "", badge = "Orçamento antes do reparo" }) {
-  return `<section class="hero"><div class="wrap hero-grid"><div class="hero-txt">${GRATING}<h1>${h1}</h1><p class="lead">${lead}</p><div class="btns">${btns}</div><ul class="ticks">${TICKS.map((t) => `<li>${ic("check")}${t}</li>`).join("")}</ul></div><div class="hero-vis${(HERO_IMG[img] || [])[3] ? " contain" : ""}"><img src="${HERO_IMG[img] ? "/assets/img/home/" + HERO_IMG[img][0] : IMG + img}" alt="${alt || HERO_ALT[img] || ""}" width="${HERO_IMG[img] ? HERO_IMG[img][1] : 1200}" height="${HERO_IMG[img] ? HERO_IMG[img][2] : 900}" fetchpriority="high"><span class="badge">${ic("shield")} ${badge}</span></div></div></section>`;
+  return `<section class="hero"><div class="wrap hero-grid"><div class="hero-txt">${GRATING}<h1>${h1}</h1><p class="lead">${lead}</p><div class="btns">${btns}</div><ul class="ticks">${TICKS.map((t) => `<li>${ic("check")}${t}</li>`).join("")}</ul></div><div class="hero-vis${(HERO_IMG[img] || [])[3] ? " contain" : ""}"><img src="${HERO_IMG[img] ? "/assets/img/home/" + HERO_IMG[img][0] + "?v=2" : IMG + img}" alt="${alt || HERO_ALT[img] || ""}" width="${HERO_IMG[img] ? HERO_IMG[img][1] : 1200}" height="${HERO_IMG[img] ? HERO_IMG[img][2] : 900}" fetchpriority="high"><span class="badge">${ic("shield")} ${badge}</span></div></div></section>`;
 }
 const sh = (t, sub = "") => `<div class="shead"><h2>${t}</h2>${sub ? `<p>${sub}</p>` : ""}</div>`;
 const rowsSec = (title, items, alt = "") => `<section class="sec ${alt}"><div class="wrap">${sh(title)}${rows(items)}</div></section>`;
