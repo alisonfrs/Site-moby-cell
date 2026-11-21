@@ -39,21 +39,10 @@
       "has": [
         {
           "type": "host",
-          "value": "www.mobycell.com.br"
-        }
-      ],
-      "destination": "https://mobycell.com.br/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
           "value": "site-moby-cell.vercel.app"
         }
       ],
-      "destination": "https://mobycell.com.br/:path*",
+      "destination": "https://www.mobycell.com.br/:path*",
       "permanent": true
     }
   ]

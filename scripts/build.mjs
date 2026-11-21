@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 
 const V = Date.now().toString(36);
 const OUT = join(dirname(fileURLToPath(import.meta.url)), "..", "public");
-const SITE = "https://mobycell.com.br";
+const SITE = "https://www.mobycell.com.br";
 const WA = "5541991332951";
 const MAPS = "https://www.google.com/maps/place/Moby+Cell+Assistencia+t%C3%A9cnica+Celulares/@-25.5840198,-49.3230281,17z/data=!4m6!3m5!1s0x94dcfc2a0990a4cf:0x7839fd71f4723732!8m2!3d-25.5840247!4d-49.3204532!16s%2Fg%2F11q484tv8z";
 const ADDR = { street: "Rua Ângelo Tozim, 239", hood: "Campo de Santana", city: "Curitiba", uf: "PR", cep: "81490-030" };
