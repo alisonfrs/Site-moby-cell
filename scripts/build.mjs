@@ -235,8 +235,8 @@ ${body}
 // Nota do Perfil da Empresa no Google (conferida em 20/11/2026). Atualizar quando mudar.
 const GRATING = `<a class="g-rating" href="https://www.google.com/maps/place/Moby+Cell+Assistencia+t%C3%A9cnica+Celulares/@-25.5840198,-49.3230281,17z/data=!4m6!3m5!1s0x94dcfc2a0990a4cf:0x7839fd71f4723732!8m2!3d-25.5840247!4d-49.3204532!16s%2Fg%2F11q484tv8z" target="_blank" rel="noopener" aria-label="Nota 4,8 de 5 com 44 avaliações no Google"><b>4,8</b><span class="st" aria-hidden="true">★★★★★</span><span>44 avaliações no Google</span></a>`;
 const TICKS = ["Garantia de até 1 ano, conforme a peça e o serviço", "Orçamento antes do reparo", "Loja física no bairro, atendimento também pelo WhatsApp"];
-function hero({ h1, lead, btns, img, alt = "", badge = "Orçamento antes do reparo" }) {
-  return `<section class="hero"><div class="wrap hero-grid"><div class="hero-txt">${GRATING}<h1>${h1}</h1><p class="lead">${lead}</p><div class="btns">${btns}</div><ul class="ticks">${TICKS.map((t) => `<li>${ic("check")}${t}</li>`).join("")}</ul></div><div class="hero-vis${(HERO_IMG[img] || [])[3] ? " contain" : ""}"><img src="${HERO_IMG[img] ? "/assets/img/home/" + HERO_IMG[img][0] + "?v=2" : IMG + img}" alt="${alt || HERO_ALT[img] || ""}" width="${HERO_IMG[img] ? HERO_IMG[img][1] : 1200}" height="${HERO_IMG[img] ? HERO_IMG[img][2] : 900}" fetchpriority="high"><span class="badge">${ic("shield")} ${badge}</span></div></div></section>`;
+function hero({ h1, lead, btns, img, alt = "", badge = "Orçamento antes do reparo", ticks = TICKS }) {
+  return `<section class="hero"><div class="wrap hero-grid"><div class="hero-txt">${GRATING}<h1>${h1}</h1><p class="lead">${lead}</p><div class="btns">${btns}</div><ul class="ticks">${ticks.map((t) => `<li>${ic("check")}${t}</li>`).join("")}</ul></div><div class="hero-vis${(HERO_IMG[img] || [])[3] ? " contain" : ""}"><img src="${HERO_IMG[img] ? "/assets/img/home/" + HERO_IMG[img][0] + "?v=2" : IMG + img}" alt="${alt || HERO_ALT[img] || ""}" width="${HERO_IMG[img] ? HERO_IMG[img][1] : 1200}" height="${HERO_IMG[img] ? HERO_IMG[img][2] : 900}" fetchpriority="high"><span class="badge">${ic("shield")} ${badge}</span></div></div></section>`;
 }
 const sh = (t, sub = "") => `<div class="shead"><h2>${t}</h2>${sub ? `<p>${sub}</p>` : ""}</div>`;
 const rowsSec = (title, items, alt = "") => `<section class="sec ${alt}"><div class="wrap">${sh(title)}${rows(items)}</div></section>`;
@@ -444,6 +444,8 @@ add({
   body: `
 ${crumbs("Formatação de notebook e computador")}
 ${hero({ img: "hero-formatacao.jpg",
+  badge: "Formatação na loja",
+  ticks: ["Notebooks e computadores", "Faça o backup antes de trazer o equipamento", "Orçamento pelo WhatsApp"],
   h1: "Formatação de <em>notebook e computador</em>",
   lead: "Procurando onde formatar notebook perto de você? Fazemos a formatação do seu notebook ou computador na loja, no Campo de Santana.",
   btns: `<a class="btn btn-red" href="#orcamento">Pedir orçamento</a>${waBtn("Olá! Quero um orçamento de formatação. Equipamento: ", "formatacao-hero")}` })}
@@ -474,6 +476,8 @@ add({
   body: `
 ${crumbs("Impressões e serviços rápidos")}
 ${hero({ img: "hero-impressao.jpg",
+  badge: "Retirada na loja",
+  ticks: ["Impressão em preto e branco ou colorida", "Xerox, digitalização e plastificação", "Envie o arquivo pelo WhatsApp"],
   h1: "Impressão, xerox e <em>plastificação</em> perto de você",
   lead: "Serviços rápidos para o dia a dia: documentos, trabalhos escolares, currículos e muito mais. Envie o arquivo pelo WhatsApp e consulte a disponibilidade.",
   btns: `${waBtn("Olá! Quero imprimir um arquivo. Vou enviar aqui.", "impressao-hero", "Enviar arquivo no WhatsApp")}<a class="btn btn-o" href="#orcamento">Pedir informações</a>` })}
@@ -504,6 +508,8 @@ add({
   body: `
 ${crumbs("Personalizados")}
 ${hero({ img: "hero-personalizados.jpg",
+  badge: "Produção sob encomenda",
+  ticks: ["Uma unidade ou pedidos em quantidade", "Personalização com a sua arte", "Prazo e valor combinados no orçamento"],
   h1: "Personalizados para <em>presentear e celebrar</em>",
   lead: "Canecas, azulejos, copos, chaveiros, cartões e brindes com a sua arte. Uma unidade ou muitas, para você, sua escola ou sua empresa.",
   btns: `<a class="btn btn-red" href="#orcamento">Pedir orçamento</a>${waBtn("Olá! Quero um orçamento de produto personalizado. Produto e quantidade: ", "personalizados-hero")}` })}
